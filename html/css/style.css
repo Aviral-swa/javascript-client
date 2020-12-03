@@ -7,47 +7,51 @@
     box-shadow: 4px 4px 4px #cecece;
 }
 
-.checkoutNavigation {
+.container__checkoutNavigation {
     display: flex;
     border-bottom: 1px solid rgb(202, 201, 201);
 
 }
 
-a {
+.container__item {
     color: #464646;
     display: block;
     padding: 10px 8px;
 }
 
-.Progress > a::after {
+.container__item--active {
+    font-weight: bold;
+}
+
+.container__progress > a::after {
     content: '/';
     padding: 0px 0px 0px 10px;
 }
 
-.Progress > a:last-child::after {
+.container__progress > a:last-child::after {
     content: '';
 }
 
-.Progress {
+.container__progress {
     display: flex;
     margin-left: 5%;
 }
 
-.cancelButton {
+.container__button--windowClose {
     position: absolute;
     right: 0px;
     margin: 10px
 }
 
-.orderInfo {
+.container__orderInfo {
     display: flex;
 }
 
-.paymentBlock {
+.container__paymentBlock {
     width: 60%;
 }
 
-.cartBlock {
+.container__cartBlock {
     width: 40%;
     background: #e2e2e2;
 }

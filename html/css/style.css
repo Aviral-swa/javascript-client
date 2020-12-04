@@ -13,7 +13,7 @@ body {
     background-color: white;
     position: relative;
     width: 90%;
-    margin: 60px auto 0px auto;
+    margin: 60px auto 60px auto;
     border: 1px solid rgb(202, 201, 201);
     box-shadow: 4px 4px 4px #adadad;
 }
@@ -157,7 +157,7 @@ body {
     background-blend-mode: screen;
 }
 
-.container__cartblock {
+.container__cartBlock {
     background: #f7f7f7;
     width: 40%;
     display: flex;
@@ -267,4 +267,66 @@ body {
 
 .container__summarytext--right {
     text-align: right;
+}
+
+
+@media screen and (min-width: 600px) and (max-width: 1000px) {
+    .container__cartlist {
+        margin: 3px;
+    }
+
+    .container__cartelement {
+        padding-bottom: 2px;
+        box-sizing: border-box;
+    }
+
+    .container__imageholder {
+        margin: 2px;
+        width: 17%;
+    }
+
+    .container__elementdescription {
+        margin: 0px;
+        padding-top: 4px;
+        box-sizing: border-box;
+    }
+
+    .container__name {
+        font-size: 10px;
+    }
+
+    .container__colour {
+        font-size: 8px;
+    }
+
+    .container__quantity {
+        font-size: 8px;
+    }
+
+    .container__bucks {
+        font-size: 8px;
+        padding: 2px;
+    }
+
+    .container__summarytext {
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .container__orderInfo {
+        flex-direction: column-reverse;
+    }
+
+    .container__cartBlock {
+        width: 100%;
+    }
+
+    .container__paymentBlock {
+        width: 100%;
+    }
+
+    .container__progress {
+        display: none;
+    }
 }

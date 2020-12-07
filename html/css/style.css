@@ -87,6 +87,12 @@ body {
     width: 25%;
     padding: 5px;
     border-radius: 3px;
+    border: 1px solid transparent;
+}
+
+.container__cardBody:hover {
+    background-color: #eeecec;
+    border: 1px solid #dbdbdb;
 }
 
 .container__cardNumber {
@@ -98,11 +104,6 @@ body {
     margin-top: 10px;
     display: flex;
     justify-content: space-around;
-}
-
-.container__card--selected {
-    background-color: #eeecec;
-    border: 1px solid #dbdbdb;
 }
 
 .container__card {

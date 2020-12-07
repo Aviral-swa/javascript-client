@@ -1,10 +1,21 @@
+html {
+    background: none;
+}
+
+body {
+    background-image: url(../images/background.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+
+}
 
 .container {
+    background-color: white;
     position: relative;
-    width: 80%;
-    margin: 100px auto 0px auto;
+    width: 90%;
+    margin: 60px auto 0px auto;
     border: 1px solid rgb(202, 201, 201);
-    box-shadow: 4px 4px 4px #cecece;
+    box-shadow: 4px 4px 4px #adadad;
 }
 
 .container__checkoutNavigation {
@@ -48,10 +59,213 @@
 }
 
 .container__paymentBlock {
+    margin: 5px;
     width: 60%;
+    display: flex;
+    flex-direction: column;
 }
 
-.container__cartBlock {
+
+.container__title {
+    color: #464646;
+    display: block;
+    padding: 4px 5px
+    
+}
+
+.container__item--title {
+    border-bottom: 1px solid rgb(202, 201, 201);
+    margin-top: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    font-weight: bold;
+    color: #868686;
+    font-size: 86%;
+}
+
+.container__cardBody {
+    width: 25%;
+    padding: 5px;
+    border-radius: 3px;
+    border: 1px solid transparent;
+}
+
+.container__cardBody:hover {
+    background-color: #eeecec;
+    border: 1px solid #dbdbdb;
+}
+
+.container__cardNumber {
+    font-size: x-small;
+    color: #3d3d3d;
+}
+
+.container__cards {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.container__card {
+    width: 100%;
+}
+
+.container__newCardBody {
+    margin: 0 auto;
+    width: 50%;
+
+}
+
+.container__newCardForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px 0px ;
+    opacity: 0.8;
+}
+
+.container__newCardInput {
+    box-sizing: border-box;
+    margin-bottom: 9px;
+    padding: 10px 4px;
+    font-size: x-small;
+    width: 100%;
+    border: 1px solid rgb(187, 186, 186);
+    border-radius: 3px;
+}
+
+.container__newCardDateInput {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.container__newCardInput--size {
+    width: 48%;
+}
+
+.container__submitButton {
+    background-color: rgb(36, 173, 36);
+    font-weight: lighter;
+    color: #f7f2eb;
+    border: 1px solid #b3b3b3;
+    padding: 12px;
+    margin-top: 10px;
+}
+
+.container__submitButton:hover {
+    background: rgb(14, 160, 14);
+    background-blend-mode: screen;
+}
+
+.container__cartblock {
+    background: #f7f7f7;
     width: 40%;
-    background: #e2e2e2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.container__cartlist {
+    margin: 5px;
+}
+
+.container__cartelement {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #cecece;
+}
+
+.container__cartelement:last-child {
+    border: none;
+}
+
+.container__imageholder {
+    padding: 5px;
+    margin-top: 5px;
+    width: 12%;
+    display: flex;
+    height: 100%;
+    background: #d6d6d6;
+}
+
+.container__cartelement--image {
+    width: 100%;
+}
+
+.container__elementdescription {
+    width: 82%;
+    margin: 5px 0px;
+}
+
+.container__descriptioncombined {
+    display: flex;
+    justify-content: space-between;
+}
+
+.container__name {
+    font-weight: bold;
+    font-size: 16px;
+    display: block;
+    color: #424242;
+}
+
+.container__bucks {
+    text-align: right;
+    font-size: 12px;
+    font-weight: bold;
+    color: #6d6d6d;
+}
+
+.fa-dollar::before {
+    padding-right: 5px;
+    font-weight: 100;
+}
+
+.container__colour {
+    display: block;
+    font-size: 10px;
+    color: #6d6d6d;
+}
+
+.container__quantity {
+    font-size: 11px;
+    color: #6d6d6d;
+}
+
+.container__text--bold {
+    font-weight: bold;
+}
+
+.container__payments {
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+    border-top: 1px solid #cecece;
+}
+
+.container__paymentsummary {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.container__summarytext {
+    font-size: 14px;
+    color: #6d6d6d;
+    display: block;
+    padding: 5px 2px;
+}
+
+.container__total {
+    border-top: 1px solid #cecece;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.container__summarytext--right {
+    text-align: right;
 }

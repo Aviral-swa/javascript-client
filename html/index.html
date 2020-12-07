@@ -25,10 +25,111 @@
         </div>
         <div class="container__orderInfo">
             <div class="container__paymentBlock">
-                <a class="container__item">Payment Block</a>
+                <p class="container__title container__item--title">Wallet</p>
+                <div class="container__cards">
+                    <div class="container__cardBody">
+                        <img class="container__card" src="./images/cards/discover.png" alt="discover">
+                        <a class="container__cardNumber">Ending wth 8899</a>
+                    </div>
+                    <div class="container__cardBody">
+                        <img class="container__card" src="./images/cards/mastercard.png" alt="mastercard">
+                        <a class="container__cardNumber">Ending wth 8899</a>
+                    </div>
+                    <div class="container__cardBody">
+                        <img class="container__card" src="./images/cards/visa.png" alt="visa">
+                        <a class="container__cardNumber">Ending wth 8899</a>
+                    </div>
+                </div>
+                <div class="container__newCard">
+                    <div class="container__title container__item--title">New Card</div>
+                    <div class="container__newCardBody">
+                        <form class="container__newCardForm">
+                            <input class="container__newCardInput" type="text" placeholder="Name on card">
+                            <input class="container__newCardInput" type="text" placeholder="xxxx-xxxx-xxxx-xxxx">
+                            <div class="container__newCardDateInput">
+                                <input class="container__newCardInput container__newCardInput--size" type="text" placeholder="MM/YY">
+                                <input class="container__newCardInput container__newCardInput--size" type="text" placeholder="CVV">
+                            </div>
+                            <button class="container__submitButton" type="submit">Continue</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="container__cartBlock">
-                <a class="container__item">Cart Block</a>
+            <div class="container__cartblock">
+                <div class="container__cartlist">
+                    <div class="container__cartelement">
+                        <div class="container__imageholder">
+                            <img class="container__cartelement--image" src="./images/products/mobile-holder.jpg">
+                        </div>
+                        <div class="container__elementdescription">
+                            <div class="container__descriptioncombined">
+                                <a class="container__name">Mobile Holder</a>
+                                <a class="container__bucks fa fa-dollar">10.00</a>
+                            </div>
+                            <span class="container__colour">Black</span>
+                            <span class="container__quantity container__text--bold">Quantity:</span>
+                            <span class="container__quantity">1</span>
+                        </div>
+                    </div>
+                    <div class="container__cartelement">
+                        <div class="container__imageholder">
+                            <img class="container__cartelement--image" src="./images/products/rado.jpg">
+                        </div>
+                        <div class="container__elementdescription">
+                            <div class="container__descriptioncombined">
+                                <a class="container__name">Rado Watch</a>
+                                <a class="container__bucks fa fa-dollar">10.00</a>
+                            </div>
+                            <span class="container__colour">Black</span>
+                            <span class="container__quantity container__text--bold">Quantity:</span>
+                            <span class="container__quantity">1</span>
+                        </div>
+                    </div>
+                    <div class="container__cartelement">
+                        <div class="container__imageholder">
+                            <img class="container__cartelement--image" src="./images/products/usb-c-2-micro.jpeg">
+                        </div>
+                        <div class="container__elementdescription">
+                            <div class="container__descriptioncombined">
+                                <a class="container__name">C type to Micro Converter</a>
+                                <a class="container__bucks fa fa-dollar">10.00</a>
+                            </div>
+                            <span class="container__colour">Black</span>
+                            <span class="container__quantity container__text--bold">Quantity:</span>
+                            <span class="container__quantity">1</span>
+                        </div>
+                    </div>
+                    <div class="container__cartelement">
+                        <div class="container__imageholder">
+                            <img class="container__cartelement--image" src="./images/products/hard-case.jpg">
+                        </div>
+                        <div class="container__elementdescription">
+                            <div class="container__descriptioncombined">
+                                <a class="container__name">Mobile Holder</a>
+                                <a class="container__bucks fa fa-dollar">10.00</a>
+                            </div>
+                            <span class="container__colour">Black</span>
+                            <span class="container__quantity container__text--bold">Quantity:</span>
+                            <span class="container__quantity">1</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="container__payments">
+                    <div>
+                        <div class="container__paymentsummary">
+                            <a class="container__summarytext">Sub Total</a><a class="container__summarytext container__summarytext--right  fa fa-dollar">100.00</a>
+                        </div>
+                        <div class="container__paymentsummary">
+                            <a class="container__summarytext">Shipping</a><a class="container__summarytext container__summarytext--right fa fa-dollar">10.00</a>
+                        </div>
+                        <div  class="container__paymentsummary">
+                            <a class="container__summarytext">Taxes</a><a class="container__summarytext container__summarytext--right fa fa-dollar">8.00</a>
+                        </div>
+                    </div>
+                    <div class="container__total">
+                        <a class="container__summarytext container__text--bold">Total</a><a class="container__summarytext container__summarytext--right container__text--bold  fa fa-dollar">118.00</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

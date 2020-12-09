@@ -1,6 +1,6 @@
 import React from 'react';
 
-function TextField(prop) {
+const TextField = (prop) => {
   const {
     defaultValue, disabled, pattern, style,
   } = prop;
@@ -13,6 +13,6 @@ function TextField(prop) {
       style={style}
     />
   );
-}
+};
 
 export default TextField;

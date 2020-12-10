@@ -12,7 +12,6 @@
       "indent": [2, 2],
       "react/jsx-indent": ["error", 2],
       "import/prefer-default-export": "off",
-      "react/no-typos": "off",
       "react/forbid-prop-types": "off"
     },
     "parserOptions": {

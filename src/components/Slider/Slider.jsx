@@ -4,6 +4,7 @@ import {
 import React, { useState, useEffect } from 'react';
 import { getRandomNumber, getNextRoundRobin } from '../../libs/utils';
 import styleSheet from './style';
+import { DEFAULT_BANNER_IMAGE } from '../../configs/constants';
 
 const Slider = (props) => {
   const [count, setCount] = useState(0);
@@ -49,7 +50,7 @@ Slider.propTypes = {
 
 Slider.defaultProps = {
   altText: 'Default Banner',
-  defaultBanner: './images/default.png',
+  defaultBanner: DEFAULT_BANNER_IMAGE,
   duration: 2000,
   height: 200,
   random: false,

@@ -2,6 +2,7 @@ import React from 'react';
 import {
   TextField, styleSheet, Slider, sliderStyle,
 } from '../../components';
+import { PUBLIC_IMAGE_FOLDER } from '../../configs/constants';
 
 const TextFieldDemo = () => {
   const style = styleSheet();
@@ -10,7 +11,7 @@ const TextFieldDemo = () => {
       <div style={sliderStyle.images__container}>
         <Slider
           height={250}
-          banners={['./images/cloud.jpg', './images/js.jpg', './images/dns-server.png', './images/load-balancer.png', './images/full-stack-web-development.jpg']}
+          banners={PUBLIC_IMAGE_FOLDER}
         />
       </div>
       <p>This Is Disabled Input</p>

@@ -1,10 +1,19 @@
 import React from 'react';
-import { TextField, styleSheet } from '../../components';
+import {
+  TextField, styleSheet, Slider, sliderStyle,
+} from '../../components';
+import { PUBLIC_IMAGE_FOLDER } from '../../configs/constants';
 
-function TextFieldDemo() {
+const TextFieldDemo = () => {
   const style = styleSheet();
   return (
     <>
+      <div style={sliderStyle.images__container}>
+        <Slider
+          height={250}
+          banners={PUBLIC_IMAGE_FOLDER}
+        />
+      </div>
       <p>This Is Disabled Input</p>
       <TextField
         defaultValue="Disabled Input"
@@ -25,5 +34,5 @@ function TextFieldDemo() {
       <p style={style.errorText}>Should be an Alphabet</p>
     </>
   );
-}
+};
 export default TextFieldDemo;

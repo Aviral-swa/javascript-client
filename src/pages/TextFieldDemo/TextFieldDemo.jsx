@@ -1,38 +1,32 @@
 import React from 'react';
 import {
-  TextField, styleSheet, Slider, sliderStyle,
+  TextField, P, Slider, Div,
 } from '../../components';
 import { PUBLIC_IMAGE_FOLDER } from '../../configs/constants';
 
-const TextFieldDemo = () => {
-  const style = styleSheet();
-  return (
-    <>
-      <div style={sliderStyle.images__container}>
-        <Slider
-          height={250}
-          banners={PUBLIC_IMAGE_FOLDER}
-        />
-      </div>
-      <p>This Is Disabled Input</p>
-      <TextField
-        defaultValue="Disabled Input"
-        disabled
-        style={style.input}
+const TextFieldDemo = () => (
+  <>
+    <Div sliderBg>
+      <Slider
+        height={250}
+        banners={PUBLIC_IMAGE_FOLDER}
       />
-      <p>A Valid Input</p>
-      <TextField
-        defaultValue="Valid Input"
-        style={style.border}
-      />
-      <p>An Input With Errors</p>
-      <TextField
-        defaultValue="101"
-        pattern="[a-z]+"
-        style={style.invalidInput}
-      />
-      <p style={style.errorText}>Should be an Alphabet</p>
-    </>
-  );
-};
+    </Div>
+    <P>This Is Disabled Input</P>
+    <TextField
+      defaultValue="Disabled Input"
+      disabled
+    />
+    <P>A Valid Input</P>
+    <TextField
+      defaultValue="Valid Input"
+    />
+    <P>An Input With Errors</P>
+    <TextField
+      defaultValue="101"
+      pattern="[a-z]+"
+    />
+    <P error>Should be an Alphabet</P>
+  </>
+);
 export default TextFieldDemo;

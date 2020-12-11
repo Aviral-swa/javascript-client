@@ -3,7 +3,7 @@ import {
 } from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { getRandomNumber, getNextRoundRobin } from '../../libs/utils';
-import styleSheet from './style';
+import { Img } from './style';
 import { DEFAULT_BANNER_IMAGE } from '../../configs/constants';
 
 const Slider = (props) => {
@@ -28,11 +28,10 @@ const Slider = (props) => {
   const bannerImage = banners[index];
   return (
     <>
-      <img
+      <Img
         src={bannerImage || defaultBanner}
         alt={altText}
         height={height}
-        style={styleSheet.images}
       />
     </>
   );

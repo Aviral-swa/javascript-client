@@ -4,7 +4,7 @@ import {
 import React, { useState, useEffect } from 'react';
 import { getRandomNumber, getNextRoundRobin } from '../../libs/utils';
 import { Img } from './style';
-import { DEFAULT_BANNER_IMAGE } from '../../configs/constants';
+import { DEFAULT_BANNER_IMAGE, total } from '../../configs/constants';
 
 const Slider = (props) => {
   const [count, setCount] = useState(0);
@@ -21,9 +21,9 @@ const Slider = (props) => {
   }, [count]);
   let index;
   if (random) {
-    index = getRandomNumber(5);
+    index = getRandomNumber(total);
   } else {
-    index = getNextRoundRobin(5, count);
+    index = getNextRoundRobin(total, count);
   }
   const bannerImage = banners[index];
   return (

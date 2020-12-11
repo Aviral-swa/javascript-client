@@ -1,21 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import { TextField, SelectField, RadioGroup } from '../../components';
-import { selectOptions } from '../../configs/constants';
+import { selectOptions, radioOptionsCricket, radioOptionsFootball } from '../../configs/constants';
 
 const InputDemo = () => {
   const [state, setState] = useState({
     name: '', sport: '', cricket: '', football: '',
   });
+
   const handlestateChange = (event) => {
     setState({ ...state, name: event.target.value });
   };
-  const handleSportChange = (event) => {
-    setState({ ...state, sport: event.target.value });
-    if (event.target.value === 'Select') {
-      setState({ ...state, sport: '' });
+
+  const handleSportChange = (event) => (
+    event.target.value === 'cricket' ? setState({ ...state, sport: 'cricket' })
+      : setState({ ...state, sport: 'football' })
+  );
+
+  const handleRoleChange = (event) => (
+    state.sport === 'cricket' ? setState({ ...state, cricket: event.target.value })
+      : setState({ ...state, football: event.target.value })
+  );
+
+  const RadioOptions = () => {
+    let option;
+    if (state.sport === 'cricket') {
+      option = radioOptionsCricket;
     }
-    return event.target.value === 'cricket' ? setState({ ...state, sport: 'cricket' }) : setState({ ...state, sport: 'football' });
+    if (state.sport === 'football') {
+      option = radioOptionsFootball;
+    }
+    return option;
   };
+
   useEffect(() => {
     console.log(state);
   });
@@ -33,7 +49,11 @@ const InputDemo = () => {
         onChange={handleSportChange}
         options={selectOptions}
       />
-      <RadioGroup />
+      <p>What you do</p>
+      <RadioGroup
+        onChange={handleRoleChange}
+        options={RadioOptions()}
+      />
     </>
   );
 };

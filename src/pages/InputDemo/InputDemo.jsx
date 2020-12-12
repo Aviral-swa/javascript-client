@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { TextField, SelectField, RadioGroup } from '../../components';
+import {
+  TextField, SelectField, RadioGroup, Button, schema,
+} from '../../components';
 import {
   selectOptions, radioOptionsCricket, radioOptionsFootball, cricket, football,
 } from '../../configs/constants';
@@ -34,6 +36,21 @@ const InputDemo = () => {
     return option;
   };
 
+  schema
+    .isValid(state)
+    .then()
+    .catch();
+
+  const ResetState = () => {
+    setState({
+      name: '', sport: '', cricket: '', football: '',
+    });
+  };
+
+  const SubmitData = () => {
+    console.log(state);
+  };
+
   useEffect(() => {
     console.log(state);
   });
@@ -62,6 +79,14 @@ const InputDemo = () => {
           </>
         ) : ''
       }
+      <Button
+        value="Cancel"
+        onClick={ResetState}
+      />
+      <Button
+        value="Submit"
+        onClick={SubmitData}
+      />
     </>
   );
 };

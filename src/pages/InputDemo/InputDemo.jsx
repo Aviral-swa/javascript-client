@@ -1,32 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { TextField, SelectField, RadioGroup } from '../../components';
-import { selectOptions, radioOptionsCricket, radioOptionsFootball } from '../../configs/constants';
+import {
+  selectOptions, radioOptionsCricket, radioOptionsFootball, cricket, football,
+} from '../../configs/constants';
 
 const InputDemo = () => {
   const [state, setState] = useState({
     name: '', sport: '', cricket: '', football: '',
   });
 
-  const handlestateChange = (event) => {
+  const handleNameChange = (event) => {
     setState({ ...state, name: event.target.value });
   };
 
   const handleSportChange = (event) => (
-    event.target.value === 'cricket' ? setState({ ...state, sport: 'cricket' })
-      : setState({ ...state, sport: 'football' })
+    event.target.value === cricket ? setState({ ...state, sport: 'cricket', football: '' })
+      : setState({ ...state, sport: 'football', cricket: '' })
   );
 
   const handleRoleChange = (event) => (
-    state.sport === 'cricket' ? setState({ ...state, cricket: event.target.value })
+    state.sport === cricket ? setState({ ...state, cricket: event.target.value })
       : setState({ ...state, football: event.target.value })
   );
 
   const RadioOptions = () => {
     let option;
-    if (state.sport === 'cricket') {
+    if (state.sport === cricket) {
       option = radioOptionsCricket;
     }
-    if (state.sport === 'football') {
+    if (state.sport === football) {
       option = radioOptionsFootball;
     }
     return option;
@@ -42,18 +44,24 @@ const InputDemo = () => {
       <TextField
         defaultValue=""
         error=""
-        onChange={handlestateChange}
+        onChange={handleNameChange}
       />
       <p>Select the game you play</p>
       <SelectField
         onChange={handleSportChange}
         options={selectOptions}
       />
-      <p>What you do</p>
-      <RadioGroup
-        onChange={handleRoleChange}
-        options={RadioOptions()}
-      />
+      {
+        (state.sport === cricket || state.sport === football) ? (
+          <>
+            <p>What you do</p>
+            <RadioGroup
+              onChange={handleRoleChange}
+              options={RadioOptions()}
+            />
+          </>
+        ) : ''
+      }
     </>
   );
 };

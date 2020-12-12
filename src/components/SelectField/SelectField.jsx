@@ -2,6 +2,7 @@ import {
   arrayOf, func, object, string,
 } from 'prop-types';
 import React from 'react';
+import Select from './style';
 
 const SelectField = (props) => {
   const {
@@ -9,12 +10,12 @@ const SelectField = (props) => {
   } = props;
   return (
     <>
-      <select onChange={onChange} error={error}>
+      <Select onChange={onChange} error={error}>
         <option>{defaultText}</option>
         {
           options.map(({ value, label }) => <option key={label} value={value}>{label}</option>)
         }
-      </select>
+      </Select>
     </>
   );
 };

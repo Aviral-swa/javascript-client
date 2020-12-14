@@ -2,6 +2,7 @@ import {
   arrayOf, func, object, string,
 } from 'prop-types';
 import React from 'react';
+import { P } from './style';
 
 const RadioGroup = (props) => {
   const { error, onChange, options } = props;
@@ -14,6 +15,7 @@ const RadioGroup = (props) => {
           <br />
         </div>
       ))}
+      <P>{error}</P>
     </>
   );
 };

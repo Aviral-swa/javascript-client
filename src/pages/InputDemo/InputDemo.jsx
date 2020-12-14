@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import * as yup from 'yup';
 import {
-  TextField, SelectField, RadioGroup, Button, schema,
+  TextField, SelectField, RadioGroup, Button,
 } from '../../components';
 import {
   selectOptions, radioOptionsCricket, radioOptionsFootball, cricket, football,
@@ -9,6 +10,10 @@ import {
 const InputDemo = () => {
   const [state, setState] = useState({
     name: '', sport: '', cricket: '', football: '',
+  });
+
+  const [touched, setTouched] = useState({
+    name: false, sport: false, role: false,
   });
 
   const handleNameChange = (event) => {
@@ -36,10 +41,53 @@ const InputDemo = () => {
     return option;
   };
 
-  schema
-    .isValid(state)
-    .then()
-    .catch();
+  const schema = yup.object().shape({
+    name: yup.string().required('required').min(3, 'min 3 char'),
+    sport: yup.string().required('required'),
+    cricket: yup.string()
+      .when('sport', {
+        is: 'cricket',
+        then: yup.string()
+          .required('required'),
+      }),
+    football: yup.string()
+      .when('sport', {
+        is: 'football',
+        then: yup.string()
+          .required('required'),
+      }),
+  });
+
+  const handleBlur = (field) => {
+    setTouched({ ...touched, [field]: true });
+  };
+
+  const hasErrors = () => {
+    try {
+      schema.validateSync(state);
+    } catch (err) {
+      return true;
+    }
+    return false;
+  };
+
+  const isTouched = () => {
+    const { name, sport, role } = touched;
+    if (name || sport || role) {
+      return true;
+    }
+    return false;
+  };
+  const getError = (field) => {
+    if (touched[field] && hasErrors()) {
+      try {
+        schema.validateSyncAt(field, state);
+      } catch (err) {
+        return err.message;
+      }
+    }
+    return null;
+  };
 
   const ResetState = () => {
     setState({
@@ -52,7 +100,7 @@ const InputDemo = () => {
   };
 
   useEffect(() => {
-    console.log(state);
+    console.log(state, touched);
   });
 
   return (
@@ -60,21 +108,26 @@ const InputDemo = () => {
       <p>Name</p>
       <TextField
         defaultValue=""
-        error=""
+        error={getError('name')}
         onChange={handleNameChange}
+        onBlur={() => handleBlur('name')}
       />
       <p>Select the game you play</p>
       <SelectField
+        error={getError('sport')}
         onChange={handleSportChange}
         options={selectOptions}
+        onBlur={() => handleBlur('sport')}
       />
       {
         (state.sport === cricket || state.sport === football) ? (
           <>
             <p>What you do</p>
             <RadioGroup
+              error={getError('role')}
               onChange={handleRoleChange}
               options={RadioOptions()}
+              onBlur={() => handleBlur('role')}
             />
           </>
         ) : ''
@@ -85,6 +138,8 @@ const InputDemo = () => {
       />
       <Button
         value="Submit"
+        // color="primary"
+        disabled={(hasErrors()) || !isTouched()}
         onClick={SubmitData}
       />
     </>

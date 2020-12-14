@@ -2,7 +2,6 @@ import {
   bool, func, objectOf, string,
 } from 'prop-types';
 import React from 'react';
-import * as yup from 'yup';
 import Button from './style';
 
 const Buttons = (props) => {
@@ -22,12 +21,6 @@ const Buttons = (props) => {
   );
 };
 
-export const schema = yup.object().shape({
-  name: yup.string().required(),
-  sport: yup.string().required(),
-  WhatYouDo: yup.string().required(),
-});
-
 Buttons.propTypes = {
   color: string,
   disabled: bool,
@@ -37,7 +30,7 @@ Buttons.propTypes = {
 };
 
 Buttons.defaultProps = {
-  color: 'primary',
+  color: 'default',
   disabled: false,
   style: {},
 };

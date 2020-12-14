@@ -4,7 +4,7 @@ const Button = styled.button`
   padding: 4px;
   margin-top: 10px;
   margin-right: 4px;
-  /* background: ${(props) => (props.primary ? 'green' : 'inherit')}; */
+  background: ${(props) => (props.primary ? 'green' : '')};
 `;
 
 export default Button;

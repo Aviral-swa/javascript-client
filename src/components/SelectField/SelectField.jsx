@@ -8,12 +8,16 @@ const SelectField = (props) => {
   const {
     error, onChange, options, defaultText, onBlur,
   } = props;
+
+  const selectOptions = options.map(({ value, label }) => (
+    <option key={label} value={value}>{label}</option>));
+
   return (
     <>
       <Select onChange={onChange} error={error} onBlur={onBlur}>
         <option>{defaultText}</option>
         {
-          options.map(({ value, label }) => <option key={label} value={value}>{label}</option>)
+          selectOptions
         }
       </Select>
       <P error>{error}</P>

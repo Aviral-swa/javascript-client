@@ -21,8 +21,7 @@ const RadioGroup = (props) => {
             onChange={onChange}
             error={error}
           />
-          <label htmlFor={value}>{value}</label>
-          <br />
+          {value}
         </div>
       ))}
       <P error>{error}</P>

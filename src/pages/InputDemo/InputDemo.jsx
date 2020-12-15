@@ -4,7 +4,7 @@ import {
   TextField, SelectField, RadioGroup, Button,
 } from '../../components';
 import {
-  selectOptions, radioOptionsCricket, radioOptionsFootball, cricket, football,
+  selectOptions, radioOptionsCricket, radioOptionsFootball,
 } from '../../configs/constants';
 
 const InputDemo = () => {
@@ -21,24 +21,21 @@ const InputDemo = () => {
   };
 
   const handleSportChange = (event) => (
-    event.target.value === cricket ? setState({ ...state, sport: 'cricket', football: '' })
-      : setState({ ...state, sport: 'football', cricket: '' })
+    setState({
+      ...state, sport: event.target.value, football: '', cricket: '',
+    })
   );
 
   const handleRoleChange = (event) => (
-    state.sport === cricket ? setState({ ...state, cricket: event.target.value })
-      : setState({ ...state, football: event.target.value })
+    setState({ ...state, [state.sport]: event.target.value })
   );
 
   const RadioOptions = () => {
-    let option;
-    if (state.sport === cricket) {
-      option = radioOptionsCricket;
-    }
-    if (state.sport === football) {
-      option = radioOptionsFootball;
-    }
-    return option;
+    const option = {
+      cricket: radioOptionsCricket,
+      football: radioOptionsFootball,
+    };
+    return option[state.sport];
   };
 
   const schema = yup.object().shape({
@@ -122,7 +119,7 @@ const InputDemo = () => {
         onBlur={() => handleBlur('sport')}
       />
       {
-        (state.sport === cricket || state.sport === football) ? (
+        (state.sport) ? (
           <>
             <p>What you do</p>
             <RadioGroup

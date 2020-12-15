@@ -6,14 +6,14 @@ import Button from './style';
 
 const Buttons = (props) => {
   const {
-    color, disabled, style, value, onClick,
+    highlight, disabled, style, value, onClick,
   } = props;
-  if (color) {
+  if (highlight && !disabled) {
     return (
       <Button
         type="submit"
         disabled={disabled}
-        color={color}
+        highlight={highlight}
         style={style}
         onClick={onClick}
       >
@@ -21,6 +21,7 @@ const Buttons = (props) => {
       </Button>
     );
   }
+
   return (
     <Button
       type="submit"
@@ -34,7 +35,7 @@ const Buttons = (props) => {
 };
 
 Buttons.propTypes = {
-  color: string,
+  highlight: bool,
   disabled: bool,
   style: objectOf(string),
   value: string.isRequired,
@@ -42,7 +43,7 @@ Buttons.propTypes = {
 };
 
 Buttons.defaultProps = {
-  color: 'default',
+  highlight: false,
   disabled: false,
   style: {},
 };

@@ -140,7 +140,7 @@ const InputDemo = () => {
       />
       <Button
         value="Submit"
-        color="color"
+        highlight
         disabled={(hasErrors()) || !isTouched()}
         onClick={SubmitData}
       />

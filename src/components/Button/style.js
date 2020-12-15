@@ -1,12 +1,15 @@
 import styled from 'styled-components';
 
 const Button = styled.button`
-  padding: 4px;
+  padding: 8px 17px;
   margin-top: 10px;
   margin-right: 4px;
-  background: ${(props) => (props.color ? 'green' : '')};
-  /* right: ${(props) => (props.color ? '30px' : '50px')}; */
-  /* position: absolute; */
+  left: 80%;
+  position: relative;
+  border-radius: 7px;
+  border: 1px solid #b0b0b0;
+  background-color: ${(props) => (props.highlight ? '#5dc62d' : '')};
+  color: ${(props) => (props.highlight ? 'white' : 'black')};
 `;
 
 export default Button;

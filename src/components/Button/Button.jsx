@@ -8,11 +8,23 @@ const Buttons = (props) => {
   const {
     color, disabled, style, value, onClick,
   } = props;
+  if (color) {
+    return (
+      <Button
+        type="submit"
+        disabled={disabled}
+        color={color}
+        style={style}
+        onClick={onClick}
+      >
+        {value}
+      </Button>
+    );
+  }
   return (
     <Button
       type="submit"
       disabled={disabled}
-      color={color}
       style={style}
       onClick={onClick}
     >

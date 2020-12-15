@@ -44,19 +44,21 @@ const InputDemo = () => {
   const schema = yup.object().shape({
     name: yup.string().required('required').min(3, 'min 3 char'),
     sport: yup.string().required('required'),
-    cricket: yup.string()
+    role: yup.string()
       .when('sport', {
         is: 'cricket',
         then: yup.string()
           .required('required'),
-      }),
-    football: yup.string()
-      .when('sport', {
-        is: 'football',
-        then: yup.string()
+        otherwise: yup.string()
           .required('required'),
       }),
   });
+
+  const playerData = {
+    name: state.name,
+    sport: state.sport,
+    role: state.cricket || state.football,
+  };
 
   const handleBlur = (field) => {
     setTouched({ ...touched, [field]: true });
@@ -64,7 +66,7 @@ const InputDemo = () => {
 
   const hasErrors = () => {
     try {
-      schema.validateSync(state);
+      schema.validateSync(playerData);
     } catch (err) {
       return true;
     }
@@ -81,7 +83,7 @@ const InputDemo = () => {
   const getError = (field) => {
     if (touched[field] && hasErrors()) {
       try {
-        schema.validateSyncAt(field, state);
+        schema.validateSyncAt(field, playerData);
       } catch (err) {
         return err.message;
       }
@@ -138,7 +140,7 @@ const InputDemo = () => {
       />
       <Button
         value="Submit"
-        // color="primary"
+        color="color"
         disabled={(hasErrors()) || !isTouched()}
         onClick={SubmitData}
       />

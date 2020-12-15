@@ -1,18 +1,35 @@
+import { bool, func, string } from 'prop-types';
 import React from 'react';
+import { Input } from './style';
 
-const TextField = (prop) => {
+const TextField = (props) => {
   const {
-    defaultValue, disabled, pattern, style,
-  } = prop;
+    defaultValue, disabled, pattern, onChange, error,
+  } = props;
   return (
-    <input
+    <Input
       type="text"
       defaultValue={defaultValue}
       disabled={disabled}
       pattern={pattern}
-      style={style}
+      error={error}
+      onChange={onChange}
     />
   );
+};
+
+TextField.propTypes = {
+  defaultValue: string.isRequired,
+  disabled: bool,
+  pattern: string,
+  error: string,
+  onChange: func.isRequired,
+};
+
+TextField.defaultProps = {
+  error: '',
+  disabled: false,
+  pattern: '.+',
 };
 
 export default TextField;

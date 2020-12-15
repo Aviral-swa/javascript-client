@@ -1,26 +1,10 @@
-function style() {
-  const styleSheet = {
-    input: {
-      width: '100%',
-      boxSizing: 'border-box',
-    },
-    border: {
-      padding: '9px',
-      border: '1px solid blue',
-      width: '100%',
-      boxSizing: 'border-box',
-      borderRadius: '5px',
-    },
-    errorText: {
-      color: 'red',
-      fontSize: '12px',
-    },
-    invalidInput: {
-      width: '100%',
-      boxSizing: 'border-box',
-    },
-  };
-  return styleSheet;
-}
+import styled from 'styled-components';
 
-export default style;
+export const Input = styled.input`
+  width: 100%;
+  box-sizing: border-box;
+`;
+export const P = styled.p`
+  color: ${(props) => (props.error ? 'red' : 'inherit')};
+  font-size: ${(props) => (props.error ? '12px' : 'inherit')};
+`;

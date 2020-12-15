@@ -10,8 +10,7 @@ const RadioGroup = (props) => {
       { options.map(({ value, label }) => (
         <div key={label}>
           <input type="radio" id={value} name={label} value={value} onChange={onChange} error={error} />
-          <label htmlFor={value}>{value}</label>
-          <br />
+          {value}
         </div>
       ))}
     </>

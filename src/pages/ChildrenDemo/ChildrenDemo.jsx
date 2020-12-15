@@ -1,4 +1,5 @@
 import React from 'react';
+import { Typography } from '@material-ui/core';
 import { Math } from '../../components';
 
 const ChildrenDemo = () => (
@@ -68,7 +69,7 @@ const ChildrenDemo = () => (
     <Math first={4} second={6} operator="?">
       {
         (item) => (
-          <p>
+          <Typography variant="h5">
             When we perform (?)
             {' '}
             {item.first}
@@ -80,7 +81,7 @@ const ChildrenDemo = () => (
             we get
             {' '}
             {item.result}
-          </p>
+          </Typography>
         )
       }
     </Math>

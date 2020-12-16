@@ -2,7 +2,8 @@ import {
   arrayOf, func, object, string,
 } from 'prop-types';
 import React from 'react';
-import { Select, P } from './style';
+import { Select } from './style';
+import { ErrorText } from '../CommonStyle';
 
 const SelectField = (props) => {
   const {
@@ -20,7 +21,7 @@ const SelectField = (props) => {
           selectOptions
         }
       </Select>
-      <P error>{error}</P>
+      <ErrorText error>{error}</ErrorText>
     </>
   );
 };

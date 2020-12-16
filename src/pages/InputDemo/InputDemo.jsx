@@ -39,15 +39,15 @@ const InputDemo = () => {
   };
 
   const schema = yup.object().shape({
-    name: yup.string().required('required').min(3, 'min 3 char'),
-    sport: yup.string().required('required'),
+    name: yup.string().required('Name is a required field').min(3, 'Atleast 3 characters'),
+    sport: yup.string().required('Sport is a required'),
     role: yup.string()
       .when('sport', {
         is: 'cricket',
         then: yup.string()
-          .required('required'),
+          .required('What you do is a required field'),
         otherwise: yup.string()
-          .required('required'),
+          .required('What you do is a required field'),
       }),
   });
 

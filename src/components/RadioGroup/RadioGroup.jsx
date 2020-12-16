@@ -2,7 +2,7 @@ import {
   arrayOf, func, object, string,
 } from 'prop-types';
 import React from 'react';
-import { P } from './style';
+import { ErrorText } from '../CommonStyle';
 
 const RadioGroup = (props) => {
   const {
@@ -24,7 +24,7 @@ const RadioGroup = (props) => {
           {value}
         </div>
       ))}
-      <P error>{error}</P>
+      <ErrorText error>{error}</ErrorText>
     </>
   );
 };

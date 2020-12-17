@@ -1,107 +1,173 @@
 import React, { useState } from 'react';
 import { bool, func } from 'prop-types';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import PersonIcon from '@material-ui/icons/Person';
-import EmailIcon from '@material-ui/icons/Email';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import IconButton from '@material-ui/core/IconButton';
+import {
+  Dialog, DialogActions, Grid, TextField, DialogContent,
+  DialogContentText, DialogTitle, InputAdornment,
+} from '@material-ui/core';
+import VisibilityOffOutlinedIcon from '@material-ui/icons/VisibilityOffOutlined';
+import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
+import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined';
+import * as yup from 'yup';
 
 const AddDialog = (props) => {
   const { open, onClose, onSubmit } = props;
 
-  const [values, setValues] = useState({
+  const [state, setState] = useState({
+    name: '',
+    email: '',
     password: '',
-    showPassword: false,
+    confirmPassword: '',
   });
 
-  const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword });
+  const [touched, setTouched] = useState({
+    name: false,
+    email: false,
+    password: false,
+    confirmPassword: false,
+  });
+
+  const handleChange = (field) => (event) => {
+    setState({ ...state, [field]: event.target.value });
   };
 
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
+  const handleBlur = (field) => {
+    setTouched({ ...touched, [field]: true });
   };
+
+  const schema = yup.object().shape({
+    name: yup.string().required('Name is a required field').min(3, 'Min 3 characters'),
+    email: yup.string().email('Enter valid email')
+      .required('Email is a required field'),
+    password: yup.string()
+      .required('Password is a required field')
+      .matches(
+        /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/g,
+        'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
+      ),
+    confirmPassword: yup.string()
+      .oneOf([yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm Password is a required field'),
+  });
+
+  const hasErrors = () => {
+    try {
+      schema.validateSync(state);
+    } catch (err) {
+      return true;
+    }
+    return false;
+  };
+
+  const isTouched = () => {
+    const {
+      name, email, password, confirmPassword,
+    } = touched;
+    if (name || email || password || confirmPassword) {
+      return true;
+    }
+    return false;
+  };
+  const getError = (field) => {
+    if (touched[field] && hasErrors()) {
+      try {
+        schema.validateSyncAt(field, state);
+      } catch (err) {
+        return err.message;
+      }
+    }
+    return null;
+  };
+
+  const renderFormField = ({
+    label, type, icon, field,
+  }) => (
+    <TextField
+      error={!!getError(field)}
+      required
+      variant="outlined"
+      margin="normal"
+      label={label}
+      type={type}
+      fullWidth
+      helperText={getError(field)}
+      onChange={handleChange(field)}
+      onBlur={() => handleBlur(field)}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            {icon}
+          </InputAdornment>
+        ),
+      }}
+    />
+  );
 
   return (
     <div>
-      <Dialog open={open} fullWidth maxWidth="md" onClose={onClose} aria-labelledby="form-dialog-title">
+      <Dialog open={open} fullWidth maxWidth="md" onClose={onClose}>
         <DialogTitle id="form-dialog-title">Add Trainee</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Enter your Traine  details.
+            Enter your Trainee details.
           </DialogContentText>
-          <TextField
-            varient="outlined"
-            id="name"
-            label="Name"
-            type="text"
-            fullWidth
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <PersonIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="email"
-            label="Email"
-            type="email"
-            fullWidth
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <EmailIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            // autoFocus
-            // margin="dense"
-            // id="password"
-            // label="Password"
-            // type="password"
-            id="standard-adornment-password"
-            type={values.showPassword ? 'text' : 'password'}
-            value={values.password}
-            onChange={handleChange('password')}
-            endAdornment={(
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                >
-                  {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-            )}
-
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="confirmPassword"
-            label="Confirm Password"
-            type="password"
-          />
+          <div>
+            <Grid container spacing={1}>
+              <Grid item md={12}>
+                {
+                  renderFormField({
+                    label: 'Name',
+                    field: 'name',
+                    type: 'text',
+                    icon: <PersonOutlineIcon />,
+                  })
+                }
+              </Grid>
+              <Grid item md={12}>
+                {
+                  renderFormField({
+                    label: 'Email',
+                    field: 'email',
+                    type: 'Email',
+                    icon: <EmailOutlinedIcon />,
+                  })
+                }
+              </Grid>
+              <Grid item md={5}>
+                {
+                  renderFormField({
+                    label: 'Password',
+                    field: 'password',
+                    type: 'password',
+                    icon: <VisibilityOffOutlinedIcon />,
+                  })
+                }
+              </Grid>
+              <Grid item md={5}>
+                {
+                  renderFormField({
+                    label: 'Confirm Password',
+                    field: 'confirmPassword',
+                    type: 'password',
+                    icon: <VisibilityOffOutlinedIcon />,
+                  })
+                }
+              </Grid>
+            </Grid>
+          </div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose} color="primary">
+          <Button
+            onClick={onClose}
+            color="primary"
+          >
             Cancel
           </Button>
-          <Button onClick={onSubmit} color="primary">
+          <Button
+            disabled={(hasErrors()) || !isTouched()}
+            onClick={() => onSubmit(state)}
+            color="primary"
+          >
             Submit
           </Button>
         </DialogActions>

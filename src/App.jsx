@@ -1,12 +1,13 @@
 import React from 'react';
 import { theme } from './theme';
-import { Login } from './pages';
+import { Navbar, FormDialog } from './pages';
 
 function App() {
   const styling = theme();
   return (
     <div className={styling.root}>
-      <Login />
+      <Navbar />
+      <FormDialog />
     </div>
   );
 }

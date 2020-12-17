@@ -108,7 +108,7 @@ const Login = () => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography variant="h5">
-          Sign in
+          Login
         </Typography>
         <form className={classes.form}>
           <TextField

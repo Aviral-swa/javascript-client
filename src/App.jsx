@@ -1,12 +1,12 @@
 import React from 'react';
 import { theme } from './theme';
-import { FormDialog } from './pages/Trainee';
+import { Login } from './pages';
 
 function App() {
   const styling = theme();
   return (
     <div className={styling.root}>
-      <FormDialog />
+      <Login />
     </div>
   );
 }

@@ -1,13 +1,13 @@
 import React from 'react';
-import { theme } from './theme';
+import { ThemeProvider } from '@material-ui/core/styles';
+import theme from './theme';
 import { FormDialog } from './pages/Trainee';
 
 function App() {
-  const styling = theme();
   return (
-    <div className={styling.root}>
+    <ThemeProvider theme={theme}>
       <FormDialog />
-    </div>
+    </ThemeProvider>
   );
 }
 

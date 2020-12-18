@@ -6,8 +6,8 @@ const ChildrenDemo = () => (
   <>
     <Math first={12} second={2} operator="+" />
     <Math first={16} second={2} operator="-" />
-    <Math first={11} second={2} operator="*" />
-    <Math first={10} second={2} operator="/" />
+    <Math first={-11} second={2} operator="*" />
+    <Math first={10.9} second={2} operator="/" />
     <Math first={28} second={3} operator="^" />
     <Math first={91} second={63} operator="*">
       {

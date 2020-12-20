@@ -1,21 +1,9 @@
 import React, { useState } from 'react';
 import {
-  Avatar, Button, CssBaseline, TextField, Link, Box, Typography, makeStyles, Container,
+  Avatar, Button, CssBaseline, TextField, Typography, makeStyles, Container,
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import * as yup from 'yup';
-
-const Copyright = () => (
-  <Typography variant="body2" color="textSecondary" align="center">
-    {'Copyright © '}
-    <Link color="inherit" href="https://successive.tech">
-      Successive Technologies
-    </Link>
-    {' '}
-    {new Date().getFullYear()}
-    {'.'}
-  </Typography>
-);
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -151,9 +139,6 @@ const Login = () => {
           </Button>
         </form>
       </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
     </Container>
   );
 };

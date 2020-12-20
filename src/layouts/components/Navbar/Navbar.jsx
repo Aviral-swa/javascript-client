@@ -25,10 +25,10 @@ const Navbar = () => {
             Trainee Portal
           </Typography>
           <div className={classes.menu}>
-            <Button color="inherit">TRAINEE</Button>
-            <Button color="inherit">TEXTFILD DEMO</Button>
-            <Button color="inherit">INPUTDEMO</Button>
-            <Button color="inherit">CHILDREN DEMO</Button>
+            <Button href="/add-trainee" color="inherit">TRAINEE</Button>
+            <Button href="/textfield-demo" color="inherit">TEXTFILD DEMO</Button>
+            <Button href="/input-demo" color="inherit">INPUTDEMO</Button>
+            <Button href="/children-demo" color="inherit">CHILDREN DEMO</Button>
             <Button color="inherit">Logout</Button>
           </div>
         </Toolbar>

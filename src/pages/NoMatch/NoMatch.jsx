@@ -58,8 +58,8 @@ const NoMatch = () => {
           <Typography className={classes.message}>
             Page not found
           </Typography>
-          <Button color="primary" variant="outlined" href="/login" className={classes.login}>
-            Login
+          <Button color="primary" variant="outlined" href="/" className={classes.login}>
+            Home
           </Button>
         </Container>
       </div>

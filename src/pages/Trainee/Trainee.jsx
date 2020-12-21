@@ -1,43 +1,25 @@
-import React, { useState } from 'react';
-import Button from '@material-ui/core/Button';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import { Grid } from '@material-ui/core';
-import { AddDialog } from './components';
+import React from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import TraineeList from './TraineeList';
+import TraineeDetail from './TraineeDetail';
+import trainees from './data/trainee';
+import { NoMatch } from '..';
 
-const FormDialog = () => {
-  const [open, setOpen] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleSumbit = (state) => (
-    console.log(state)
-  );
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  return (
-    <div>
-      <Grid container justify="center">
-        <Button
-          variant="outlined"
-          color="primary"
-          startIcon={<PersonAddIcon />}
-          onClick={handleClickOpen}
-        >
-          Add Trainee
-        </Button>
-      </Grid>
-      <AddDialog
-        open={open}
-        onClose={handleClose}
-        onSubmit={handleSumbit}
-      />
-    </div>
-  );
+const renderTrainee = (routerProps) => {
+  const traineeId = parseInt(routerProps.match.params.id, 10);
+  const foundTrainee = trainees.find((traineeObj) => traineeObj.id === traineeId);
+  return (foundTrainee ? <TraineeDetail trainee={foundTrainee} /> : <NoMatch />);
 };
 
-export default FormDialog;
+const Trainee = () => (
+  <Router>
+    <Switch>
+      <Route exact path="/" component={TraineeList} />
+      <Route exact path="/trainee" component={TraineeList} />
+      <Route exact path="/trainee/:id" render={(routerProps) => renderTrainee(routerProps)} />
+      <Route default component={NoMatch} />
+    </Switch>
+  </Router>
+);
+
+export default Trainee;

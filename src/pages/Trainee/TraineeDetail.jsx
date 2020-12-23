@@ -48,7 +48,7 @@ const TraineeDetail = (props) => {
   return (
     <>
       <div className={classes.root}>
-        <Paper fullWidth elevation={3} className={classes.container}>
+        <Paper fullwidth="true" elevation={3} className={classes.container}>
           <div>
             <img className={classes.image} alt="Thumbnail" />
           </div>

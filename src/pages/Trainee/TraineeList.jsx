@@ -8,17 +8,23 @@ import {
   AddDialog, Table, EditDialog, RemoveDialog,
 } from './components';
 import trainee from './data/trainee';
+import { SnackBarProvider } from '../../contexts';
 
 const TraineeList = (routerProps) => {
   const [open, setOpen] = useState({
     open: false,
     editOpen: false,
     deleteOpen: false,
+    snackOpen: false,
   });
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState();
   const [page, setPage] = useState(0);
   const [deleted, setDeleted] = useState(0);
+  const [snackValues, setSnackValues] = useState({
+    message: '',
+    status: '',
+  });
   const [prefill, setPrefill] = useState({
     name: '',
     email: '',
@@ -42,9 +48,11 @@ const TraineeList = (routerProps) => {
     setOpen({ ...open, open: true });
   };
 
-  const handleSumbit = (state) => (
-    console.log(state)
-  );
+  const handleSumbit = (state) => {
+    setSnackValues({ message: 'Trainee Added Successfully', status: 'success' });
+    console.log(state);
+    setOpen({ ...open, open: false, snackOpen: true });
+  };
 
   const handleClose = () => {
     setOpen({ ...open, open: false });
@@ -69,13 +77,26 @@ const TraineeList = (routerProps) => {
   };
 
   const handleOnClickEdit = (value) => {
-    setOpen({ ...open, editOpen: false });
+    setSnackValues({ message: 'Updated Successfully', status: 'success' });
     console.log(value);
+    setOpen({ ...open, editOpen: false, snackOpen: true });
   };
 
   const handleOnClickDelete = () => {
-    setOpen({ ...open, deleteOpen: false });
-    console.log(deleted);
+    if (deleted.createdAt >= '2019-02-14') {
+      setSnackValues({ message: 'Deleted Successfully', status: 'success' });
+      console.log(deleted);
+    } else {
+      setSnackValues({ message: 'Cannot Delete Trainee', status: 'error' });
+    }
+    setOpen({ ...open, deleteOpen: false, snackOpen: true });
+  };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen({ ...open, snackOpen: false });
   };
 
   const getDate = (date) => moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');
@@ -141,6 +162,12 @@ const TraineeList = (routerProps) => {
         open={open.deleteOpen}
         onClose={handleDeleteClose}
         onClickDelete={handleOnClickDelete}
+      />
+      <SnackBarProvider
+        open={open.snackOpen}
+        message={snackValues.message}
+        status={snackValues.status}
+        onClose={handleSnackbarClose}
       />
     </div>
   );

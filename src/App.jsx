@@ -1,14 +1,12 @@
 import React from 'react';
 import { ThemeProvider } from '@material-ui/core/styles';
+import { Login } from './pages';
 import theme from './theme';
-import { FormDialog } from './pages/Trainee';
 
-function App() {
-  return (
-    <ThemeProvider theme={theme}>
-      <FormDialog />
-    </ThemeProvider>
-  );
-}
+const App = () => (
+  <ThemeProvider theme={theme}>
+    <Login />
+  </ThemeProvider>
+);
 
 export default App;

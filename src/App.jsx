@@ -1,11 +1,17 @@
 import React from 'react';
 import { ThemeProvider } from '@material-ui/core/styles';
-import { Login } from './pages';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import theme from './theme';
+import { PrivateRoute, AuthRoute } from './routes';
 
 const App = () => (
   <ThemeProvider theme={theme}>
-    <Login />
+    <Router>
+      <Switch>
+        <Route path="/login" component={AuthRoute} />
+        <Route default component={PrivateRoute} />
+      </Switch>
+    </Router>
   </ThemeProvider>
 );
 

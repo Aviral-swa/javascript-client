@@ -2,6 +2,7 @@ import React from 'react';
 import {
   makeStyles, AppBar, Toolbar, Typography, Button, CssBaseline,
 } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -10,6 +11,9 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
     margin: theme.spacing(2),
+  },
+  button: {
+    color: 'white',
   },
 }));
 
@@ -24,11 +28,19 @@ const Navbar = () => {
           <Typography variant="h6" className={classes.title}>
             Trainee Portal
           </Typography>
-          <div className={classes.menu}>
-            <Button color="inherit">TRAINEE</Button>
-            <Button color="inherit">TEXTFILD DEMO</Button>
-            <Button color="inherit">INPUTDEMO</Button>
-            <Button color="inherit">CHILDREN DEMO</Button>
+          <div>
+            <Link to="/add-trainee">
+              <Button className={classes.button}>TRAINEE</Button>
+            </Link>
+            <Link to="/textfield-demo">
+              <Button className={classes.button}>TEXTFILD DEMO</Button>
+            </Link>
+            <Link to="/input-demo">
+              <Button className={classes.button}>INPUTDEMO</Button>
+            </Link>
+            <Link to="/children-demo">
+              <Button className={classes.button}>CHILDREN DEMO</Button>
+            </Link>
             <Button color="inherit">Logout</Button>
           </div>
         </Toolbar>

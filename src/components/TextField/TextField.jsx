@@ -40,14 +40,16 @@ TextField.propTypes = {
   disabled: bool,
   pattern: string,
   error: string,
-  onChange: func.isRequired,
-  onBlur: func.isRequired,
+  onChange: func,
+  onBlur: func,
 };
 
 TextField.defaultProps = {
   error: '',
   disabled: false,
   pattern: '.+',
+  onChange: null,
+  onBlur: null,
 };
 
 export default TextField;

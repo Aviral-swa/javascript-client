@@ -1,14 +1,28 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 import moment from 'moment';
-import { AddDialog, Table } from './components';
+import {
+  AddDialog, Table, EditDialog, RemoveDialog,
+} from './components';
 import trainee from './data/trainee';
 
 const TraineeList = (routerProps) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState({
+    open: false,
+    editOpen: false,
+    deleteOpen: false,
+  });
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState();
+  const [page, setPage] = useState(0);
+  const [deleted, setDeleted] = useState(0);
+  const [prefill, setPrefill] = useState({
+    name: '',
+    email: '',
+  });
 
   const handleSort = (property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -20,8 +34,12 @@ const TraineeList = (routerProps) => {
     routerProps.history.push(`/add-trainee/${data.id}`);
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
   const handleClickOpen = () => {
-    setOpen(true);
+    setOpen({ ...open, open: true });
   };
 
   const handleSumbit = (state) => (
@@ -29,11 +47,38 @@ const TraineeList = (routerProps) => {
   );
 
   const handleClose = () => {
-    setOpen(false);
+    setOpen({ ...open, open: false });
+  };
+
+  const handleEditDialogOpen = (traineeData) => {
+    setOpen({ ...open, editOpen: true });
+    setPrefill({ ...prefill, name: [traineeData.name], email: [traineeData.email] });
+  };
+
+  const handleRemoveDialogOpen = (traineeData) => {
+    setOpen({ ...open, deleteOpen: true });
+    setDeleted(traineeData);
+  };
+
+  const handleEditClose = () => {
+    setOpen({ ...open, editOpen: false });
+  };
+
+  const handleDeleteClose = () => {
+    setOpen({ ...open, deleteOpen: false });
+  };
+
+  const handleOnClickEdit = (value) => {
+    setOpen({ ...open, editOpen: false });
+    console.log(value);
+  };
+
+  const handleOnClickDelete = () => {
+    setOpen({ ...open, deleteOpen: false });
+    console.log(deleted);
   };
 
   const getDate = (date) => moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');
-
   return (
     <div>
       <Button
@@ -63,15 +108,39 @@ const TraineeList = (routerProps) => {
           format: getDate,
         },
         ]}
+        actions={[
+          {
+            icon: <EditIcon />,
+            handler: handleEditDialogOpen,
+          },
+          {
+            icon: <DeleteIcon />,
+            handler: handleRemoveDialogOpen,
+          },
+        ]}
         order={order}
         orderBy={orderBy}
         onSort={handleSort}
         onSelect={handleSelect}
+        count={100}
+        page={page}
+        onChangePage={handleChangePage}
       />
       <AddDialog
-        open={open}
+        open={open.open}
         onClose={handleClose}
         onSubmit={handleSumbit}
+      />
+      <EditDialog
+        open={open.editOpen}
+        onClose={handleEditClose}
+        onClickEdit={handleOnClickEdit}
+        defaultValue={prefill}
+      />
+      <RemoveDialog
+        open={open.deleteOpen}
+        onClose={handleDeleteClose}
+        onClickDelete={handleOnClickDelete}
       />
     </div>
   );

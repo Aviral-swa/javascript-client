@@ -1,8 +1,8 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core/styles';
-import { AuthRoute, PrivateRoute } from './routes';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import theme from './theme';
+import { PrivateRoute, AuthRoute } from './routes';
 
 const App = () => (
   <ThemeProvider theme={theme}>

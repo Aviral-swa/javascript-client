@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router, Route, Switch, Redirect,
 } from 'react-router-dom';
 import {
-  TextFieldDemo, InputDemo, ChildrenDemo, FormDialog, NoMatch,
+  TextFieldDemo, InputDemo, ChildrenDemo, Trainee, NoMatch,
 } from '../pages';
 import { PrivateLayout } from '../layouts';
 
@@ -21,7 +21,7 @@ const PrivateRoute = () => (
         <Route exact path="/textfield-demo" component={TextFieldDemo} />
         <Route exact path="/input-demo" component={InputDemo} />
         <Route exact path="/children-demo" component={ChildrenDemo} />
-        <Route exact path="/add-trainee" component={FormDialog} />
+        <Route path="/add-trainee" component={Trainee} />
         <Route default component={NoMatch} />
       </Switch>
     </div>

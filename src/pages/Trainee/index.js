@@ -1,1 +1,1 @@
-export { default as FormDialog } from './Trainee';
+export { default as Trainee } from './Trainee';

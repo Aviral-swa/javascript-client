@@ -45,7 +45,6 @@ const table = (props) => {
     Columns.map((column) => (
       <StyledTableCell key={column.label} align={column.align}>
         <TableSortLabel
-          hideSortIcon
           active={orderBy === column.label}
           direction={order}
           onClick={() => onSort(column.label)}

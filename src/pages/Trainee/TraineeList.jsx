@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { Link } from 'react-router-dom';
-import { AddDialog } from './components';
+import { AddDialog, Table } from './components';
 import trainee from './data/trainee';
 
 const TraineeList = () => {
@@ -30,6 +30,20 @@ const TraineeList = () => {
       >
         Add Trainee
       </Button>
+      <Table
+        id="id"
+        data={trainee}
+        columns={[{
+          field: 'name',
+          label: 'Name',
+          align: 'center',
+        },
+        {
+          field: 'email',
+          label: 'Email',
+        },
+        ]}
+      />
       <ul>
         {
           trainee.map((obj) => (

@@ -20,6 +20,10 @@ const useStyles = makeStyles((theme) => ({
 const Navbar = () => {
   const classes = useStyles();
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+  };
+
   return (
     <>
       <CssBaseline />
@@ -41,7 +45,9 @@ const Navbar = () => {
             <Link to="/children-demo">
               <Button className={classes.button}>CHILDREN DEMO</Button>
             </Link>
-            <Button color="inherit">Logout</Button>
+            <Link to="/login">
+              <Button className={classes.button} onClick={handleLogout}>Logout</Button>
+            </Link>
           </div>
         </Toolbar>
       </AppBar>

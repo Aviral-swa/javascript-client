@@ -1,10 +1,10 @@
 import React from 'react';
 import {
-  makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-  Paper, Typography, withStyles, TableSortLabel,
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
+  Paper, Typography, withStyles, TableSortLabel, TablePagination, IconButton,
 } from '@material-ui/core';
 import {
-  string, arrayOf, object, func,
+  string, arrayOf, object, func, number,
 } from 'prop-types';
 
 const StyledTableCell = withStyles((theme) => ({
@@ -29,20 +29,14 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-const useStyles = makeStyles((theme) => ({
-  table: {
-    width: theme.spacing(165),
-  },
-}));
-
 const table = (props) => {
-  const classes = useStyles();
   const {
     id, columns, data, onSort, orderBy, order, onSelect,
+    count, rowsPerPage, page, onChangePage, actions,
   } = props;
 
-  const renderHeader = (Columns) => (
-    Columns.map((column) => (
+  const renderHeader = () => (
+    columns.map((column) => (
       <StyledTableCell key={column.label} align={column.align}>
         <TableSortLabel
           active={orderBy === column.label}
@@ -57,11 +51,15 @@ const table = (props) => {
     ))
   );
 
-  const renderTableRow = (Columns, Data, Id) => (
-    Data.map((trainee) => (
-      <StyledTableRow key={trainee[Id]} onClick={() => onSelect(trainee)}>
-        { Columns.map((column) => (
-          <TableCell key={`${trainee[Id]}${column.field}`} align={column.align}>
+  const renderTableRow = () => (
+    data.map((trainee) => (
+      <StyledTableRow key={trainee[id]}>
+        { columns.map((column) => (
+          <TableCell
+            key={`${trainee[id]}${column.field}`}
+            align={column.align}
+            onClick={() => onSelect(trainee)}
+          >
             <Typography>
               {
                 (column.format) ? (column.format(trainee[column.field]))
@@ -70,23 +68,50 @@ const table = (props) => {
             </Typography>
           </TableCell>
         ))}
+        {
+          actions.map((action, index) => (
+            <IconButton
+              component="td"
+              key={`${trainee[id]}${index + 1}`}
+              onClick={() => action.handler(trainee)}
+            >
+              {action.icon}
+            </IconButton>
+          ))
+        }
       </StyledTableRow>
     ))
   );
 
+  const renderPagination = () => (
+    <TablePagination
+      rowsPerPageOptions={[]}
+      component="div"
+      count={count}
+      rowsPerPage={rowsPerPage}
+      page={page}
+      onChangePage={onChangePage}
+    />
+  );
+
   return (
-    <TableContainer component={Paper} className={classes.table}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            {renderHeader(columns)}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {renderTableRow(columns, data, id)}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              {renderHeader()}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {renderTableRow()}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      {
+        renderPagination()
+      }
+    </>
   );
 };
 
@@ -98,11 +123,19 @@ table.propTypes = {
   orderBy: string,
   onSort: func.isRequired,
   onSelect: func.isRequired,
+  count: number.isRequired,
+  page: number,
+  rowsPerPage: number,
+  onChangePage: func.isRequired,
+  actions: arrayOf(object),
 };
 
 table.defaultProps = {
   order: 'asc',
   orderBy: '',
+  page: 0,
+  rowsPerPage: 5,
+  actions: [{}],
 };
 
 export default table;

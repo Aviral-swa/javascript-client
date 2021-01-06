@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  BrowserRouter as Router, Route, Switch, Redirect,
+  Route, Switch, Redirect,
 } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import {
@@ -16,8 +16,8 @@ const useStyles = makeStyles((theme) => ({
 
 const PrivateRoute = () => {
   const classes = useStyles();
-  return (
-    <Router>
+  if (localStorage.getItem('token')) {
+    return (
       <div>
         <PrivateLayout />
         <div className={classes.root}>
@@ -25,7 +25,7 @@ const PrivateRoute = () => {
             <Route
               exact
               path="/"
-              render={() => (<Redirect to="/add-trainee" />
+              render={() => (<Redirect to="/login" />
               )}
             />
             <Route exact path="/textfield-demo" component={TextFieldDemo} />
@@ -36,7 +36,12 @@ const PrivateRoute = () => {
           </Switch>
         </div>
       </div>
-    </Router>
+    );
+  }
+  return (
+    <Switch>
+      <Redirect to="/login" />
+    </Switch>
   );
 };
 

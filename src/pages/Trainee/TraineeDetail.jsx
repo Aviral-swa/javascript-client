@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
   image: {
     position: 'relative',
-    top: '63px',
+    top: '3px',
     background: 'grey',
     padding: '60px 60px',
     margin: '1px',

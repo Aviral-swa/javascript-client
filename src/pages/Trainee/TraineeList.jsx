@@ -7,8 +7,9 @@ import moment from 'moment';
 import {
   AddDialog, Table, EditDialog, RemoveDialog,
 } from './components';
-import trainee from './data/trainee';
+// import trainee from './data/trainee';
 import { SnackBarContext } from '../../contexts';
+import { callApi } from '../../libs/utils';
 
 const TraineeList = (routerProps) => {
   const [open, setOpen] = useState({
@@ -24,6 +25,7 @@ const TraineeList = (routerProps) => {
     name: '',
     email: '',
   });
+  const [loading, setLoading] = useState(false);
 
   const handleSort = (property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -42,15 +44,22 @@ const TraineeList = (routerProps) => {
   const handleClickOpen = () => {
     setOpen({ ...open, open: true });
   };
-
-  const handleSumbit = (openSnackBar, state) => {
-    openSnackBar('Trainee Added Successfully', 'success');
-    console.log(state);
-    setOpen({ ...open, open: false });
+  const handleSumbit = async (openSnackBar, state) => {
+    const response = await callApi('/trainee', 'post', state);
+    setLoading(true);
+    if (response.data) {
+      setLoading(false);
+      openSnackBar(response.message, response.status);
+      setOpen({ ...open, open: false });
+    } else {
+      setLoading(false);
+      openSnackBar(response.message, response.status);
+    }
   };
 
   const handleClose = () => {
     setOpen({ ...open, open: false });
+    setLoading(false);
   };
 
   const handleEditDialogOpen = (traineeData) => {
@@ -86,6 +95,14 @@ const TraineeList = (routerProps) => {
     }
     setOpen({ ...open, deleteOpen: false });
   };
+  const name = 'email';
+  const traineeData = async () => {
+    const trainees = await callApi('/trainee', 'get');
+    const traineed = trainees.data.traineesList;
+    console.log(traineed);
+    Object.values(traineed).map((item) => (console.log(item[name])));
+    return traineed;
+  };
 
   const getDate = (date) => moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');
   return (
@@ -103,7 +120,7 @@ const TraineeList = (routerProps) => {
             </Button>
             <Table
               id="id"
-              data={trainee}
+              data={traineeData()}
               columns={[{
                 field: 'name',
                 label: 'Name',
@@ -142,6 +159,7 @@ const TraineeList = (routerProps) => {
               open={open.open}
               onClose={handleClose}
               onSubmit={(state) => handleSumbit(openSnackBar, state)}
+              loading={loading}
             />
             <EditDialog
               open={open.editOpen}

@@ -4,7 +4,6 @@ import moment from 'moment';
 import {
   Paper, makeStyles, Typography, Button,
 } from '@material-ui/core';
-import trainees from './data/trainee';
 import { NoMatch } from '../NoMatch';
 
 const useStyles = makeStyles((theme) => ({
@@ -37,7 +36,9 @@ const useStyles = makeStyles((theme) => ({
 
 const TraineeDetail = (props) => {
   const { routerProps: { match: { params: { id } }, history: { goBack } } } = props;
-  const trainee = trainees.find((traineeObj) => traineeObj.id === id);
+  const trainees = JSON.parse(localStorage.getItem('trainees'));
+  const ids = '_id';
+  const trainee = trainees.find((traineeObj) => traineeObj[ids] === id);
   if (!trainee) {
     return <NoMatch />;
   }

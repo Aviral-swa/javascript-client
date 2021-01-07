@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import EditIcon from '@material-ui/icons/Edit';
@@ -7,9 +7,9 @@ import moment from 'moment';
 import {
   AddDialog, Table, EditDialog, RemoveDialog,
 } from './components';
-// import trainee from './data/trainee';
 import { SnackBarContext } from '../../contexts';
 import { callApi } from '../../libs/utils';
+import { withLoaderAndMessage } from '../../components';
 
 const TraineeList = (routerProps) => {
   const [open, setOpen] = useState({
@@ -25,7 +25,13 @@ const TraineeList = (routerProps) => {
     name: '',
     email: '',
   });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [traineesData, setTraineesData] = useState({
+    dataCount: 0,
+    traineeData: [],
+  });
+
+  const EnhancedTable = withLoaderAndMessage(Table);
 
   const handleSort = (property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -33,8 +39,8 @@ const TraineeList = (routerProps) => {
     setOrderBy(property);
   };
 
-  const handleSelect = (data) => {
-    routerProps.history.push(`/add-trainee/${data.id}`);
+  const handleSelect = (id) => {
+    routerProps.history.push(`/add-trainee/${id}`);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -95,14 +101,26 @@ const TraineeList = (routerProps) => {
     }
     setOpen({ ...open, deleteOpen: false });
   };
-  const name = 'email';
-  const traineeData = async () => {
-    const trainees = await callApi('/trainee', 'get');
-    const traineed = trainees.data.traineesList;
-    console.log(traineed);
-    Object.values(traineed).map((item) => (console.log(item[name])));
-    return traineed;
+
+  const getTrainees = async () => {
+    const query = {
+      skip: page * 5,
+      limit: 5,
+    };
+    const trainees = await callApi('/trainee', 'get', query);
+    if (trainees.data) {
+      const { data: { traineesList, total } } = trainees;
+      setTraineesData({ dataCount: total, traineeData: traineesList });
+      localStorage.setItem('trainees', JSON.stringify(traineesData.traineeData));
+      setLoading(false);
+    } else {
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    getTrainees();
+  }, [loading, page]);
 
   const getDate = (date) => moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');
   return (
@@ -118,9 +136,9 @@ const TraineeList = (routerProps) => {
             >
               Add Trainee
             </Button>
-            <Table
-              id="id"
-              data={traineeData()}
+            <EnhancedTable
+              id="_id"
+              data={traineesData.traineeData}
               columns={[{
                 field: 'name',
                 label: 'Name',
@@ -151,9 +169,12 @@ const TraineeList = (routerProps) => {
               orderBy={orderBy}
               onSort={handleSort}
               onSelect={handleSelect}
-              count={100}
+              count={traineesData.dataCount}
               page={page}
               onChangePage={handleChangePage}
+              rowsPerPage={5}
+              loading={loading}
+              dataCount={traineesData.traineeData.length}
             />
             <AddDialog
               open={open.open}

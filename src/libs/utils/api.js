@@ -7,6 +7,10 @@ const callApi = async (route, method, body) => {
       headers: {
         Authorization: localStorage.getItem('token'),
       },
+      params: {
+        skip: body.skip,
+        limit: body.limit,
+      },
     };
     if (method === 'get') {
       const response = await axios[method](`${BASE_URL}${route}`, authHeader);

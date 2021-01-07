@@ -34,7 +34,6 @@ const table = (props) => {
     id, columns, data, onSort, orderBy, order, onSelect,
     count, rowsPerPage, page, onChangePage, actions,
   } = props;
-  console.log(data);
   const renderHeader = () => (
     columns.map((column) => (
       <StyledTableCell key={column.label} align={column.align}>
@@ -52,13 +51,13 @@ const table = (props) => {
   );
 
   const renderTableRow = () => (
-    Object.values(data).map((trainee) => (
+    data.map((trainee) => (
       <StyledTableRow key={trainee[id]}>
         { columns.map((column) => (
           <TableCell
             key={`${trainee[id]}${column.field}`}
             align={column.align}
-            onClick={() => onSelect(trainee)}
+            onClick={() => onSelect(trainee[id])}
           >
             <Typography>
               {

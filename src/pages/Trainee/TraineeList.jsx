@@ -8,6 +8,7 @@ import {
   AddDialog, Table, EditDialog, RemoveDialog,
 } from './components';
 import trainee from './data/trainee';
+import { SnackBarContext } from '../../contexts';
 
 const TraineeList = (routerProps) => {
   const [open, setOpen] = useState({
@@ -42,9 +43,11 @@ const TraineeList = (routerProps) => {
     setOpen({ ...open, open: true });
   };
 
-  const handleSumbit = (state) => (
-    console.log(state)
-  );
+  const handleSumbit = (openSnackBar, state) => {
+    openSnackBar('Trainee Added Successfully', 'success');
+    console.log(state);
+    setOpen({ ...open, open: false });
+  };
 
   const handleClose = () => {
     setOpen({ ...open, open: false });
@@ -68,81 +71,93 @@ const TraineeList = (routerProps) => {
     setOpen({ ...open, deleteOpen: false });
   };
 
-  const handleOnClickEdit = (value) => {
-    setOpen({ ...open, editOpen: false });
+  const handleOnClickEdit = (openSnackBar, value) => {
+    openSnackBar('Trainee Updated Successfully', 'success');
     console.log(value);
+    setOpen({ ...open, editOpen: false });
   };
 
-  const handleOnClickDelete = () => {
+  const handleOnClickDelete = (openSnackBar) => {
+    if (deleted.createdAt >= '2019-02-14') {
+      openSnackBar('Trainee Deleted Successfully', 'success');
+      console.log(deleted);
+    } else {
+      openSnackBar('Cannot Delete Trainee', 'error');
+    }
     setOpen({ ...open, deleteOpen: false });
-    console.log(deleted);
   };
 
   const getDate = (date) => moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');
   return (
-    <div>
-      <Button
-        variant="outlined"
-        color="primary"
-        startIcon={<PersonAddIcon />}
-        onClick={handleClickOpen}
-      >
-        Add Trainee
-      </Button>
-      <Table
-        id="id"
-        data={trainee}
-        columns={[{
-          field: 'name',
-          label: 'Name',
-        },
-        {
-          field: 'email',
-          label: 'Email',
-          format: (value) => value && value.toUpperCase(),
-        },
-        {
-          field: 'createdAt',
-          label: 'Date',
-          align: 'right',
-          format: getDate,
-        },
-        ]}
-        actions={[
-          {
-            icon: <EditIcon />,
-            handler: handleEditDialogOpen,
-          },
-          {
-            icon: <DeleteIcon />,
-            handler: handleRemoveDialogOpen,
-          },
-        ]}
-        order={order}
-        orderBy={orderBy}
-        onSort={handleSort}
-        onSelect={handleSelect}
-        count={100}
-        page={page}
-        onChangePage={handleChangePage}
-      />
-      <AddDialog
-        open={open.open}
-        onClose={handleClose}
-        onSubmit={handleSumbit}
-      />
-      <EditDialog
-        open={open.editOpen}
-        onClose={handleEditClose}
-        onClickEdit={handleOnClickEdit}
-        defaultValue={prefill}
-      />
-      <RemoveDialog
-        open={open.deleteOpen}
-        onClose={handleDeleteClose}
-        onClickDelete={handleOnClickDelete}
-      />
-    </div>
+    <SnackBarContext.Consumer>
+      {
+        ({ openSnackBar }) => (
+          <div>
+            <Button
+              variant="outlined"
+              color="primary"
+              startIcon={<PersonAddIcon />}
+              onClick={handleClickOpen}
+            >
+              Add Trainee
+            </Button>
+            <Table
+              id="id"
+              data={trainee}
+              columns={[{
+                field: 'name',
+                label: 'Name',
+              },
+              {
+                field: 'email',
+                label: 'Email',
+                format: (value) => value && value.toUpperCase(),
+              },
+              {
+                field: 'createdAt',
+                label: 'Date',
+                align: 'right',
+                format: getDate,
+              },
+              ]}
+              actions={[
+                {
+                  icon: <EditIcon />,
+                  handler: handleEditDialogOpen,
+                },
+                {
+                  icon: <DeleteIcon />,
+                  handler: handleRemoveDialogOpen,
+                },
+              ]}
+              order={order}
+              orderBy={orderBy}
+              onSort={handleSort}
+              onSelect={handleSelect}
+              count={100}
+              page={page}
+              onChangePage={handleChangePage}
+            />
+            <AddDialog
+              open={open.open}
+              onClose={handleClose}
+              onSubmit={(state) => handleSumbit(openSnackBar, state)}
+            />
+            <EditDialog
+              open={open.editOpen}
+              onClose={handleEditClose}
+              onClickEdit={(value) => handleOnClickEdit(openSnackBar, value)}
+              defaultValue={prefill}
+            />
+            <RemoveDialog
+              open={open.deleteOpen}
+              onClose={handleDeleteClose}
+              onClickDelete={() => handleOnClickDelete(openSnackBar)}
+            />
+          </div>
+        )
+      }
+    </SnackBarContext.Consumer>
   );
 };
 

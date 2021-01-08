@@ -52,7 +52,7 @@ const Login = (routerProps) => {
       routerProps.history.push('/add-trainee');
     } else {
       setTouched({ ...state, signIn: false });
-      openSnackBar(response, 'error');
+      openSnackBar('Login failed', 'error');
     }
   };
 

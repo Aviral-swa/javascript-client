@@ -44,7 +44,7 @@ const TraineeList = (routerProps) => {
   };
 
   const handleSumbit = (openSnackBar, state) => {
-    openSnackBar('Trainee Added Successfully', 'success');
+    openSnackBar('Trainee added successfully', 'success');
     console.log(state);
     setOpen({ ...open, open: false });
   };
@@ -72,17 +72,17 @@ const TraineeList = (routerProps) => {
   };
 
   const handleOnClickEdit = (openSnackBar, value) => {
-    openSnackBar('Trainee Updated Successfully', 'success');
+    openSnackBar('Trainee updated successfully', 'success');
     console.log(value);
     setOpen({ ...open, editOpen: false });
   };
 
   const handleOnClickDelete = (openSnackBar) => {
     if (deleted.createdAt >= '2019-02-14') {
-      openSnackBar('Trainee Deleted Successfully', 'success');
+      openSnackBar('Trainee deleted successfully', 'success');
       console.log(deleted);
     } else {
-      openSnackBar('Cannot Delete Trainee', 'error');
+      openSnackBar('Cannot delete trainee', 'error');
     }
     setOpen({ ...open, deleteOpen: false });
   };

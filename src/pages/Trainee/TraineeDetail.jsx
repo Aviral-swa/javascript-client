@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   },
   image: {
     position: 'relative',
-    top: '3px',
+    top: '62px',
     background: 'grey',
     padding: '60px 60px',
     margin: '1px',
@@ -35,10 +35,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TraineeDetail = (props) => {
-  const { routerProps: { match: { params: { id } }, history: { goBack } } } = props;
-  const trainees = JSON.parse(localStorage.getItem('trainees'));
-  const ids = '_id';
-  const trainee = trainees.find((traineeObj) => traineeObj[ids] === id);
+  const { routerProps: { history: { goBack } } } = props;
+  const trainee = JSON.parse(localStorage.getItem('trainees'));
   if (!trainee) {
     return <NoMatch />;
   }

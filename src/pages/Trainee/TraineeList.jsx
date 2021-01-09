@@ -39,12 +39,9 @@ const TraineeList = (routerProps) => {
     setOrderBy(property);
   };
 
-  const handleSelect = (id) => {
-    routerProps.history.push(`/add-trainee/${id}`);
-  };
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const handleSelect = (trainee) => {
+    routerProps.history.push(`/add-trainee/${trainee.originalId}`);
+    localStorage.setItem('trainees', JSON.stringify(trainee));
   };
 
   const handleClickOpen = () => {
@@ -109,17 +106,25 @@ const TraineeList = (routerProps) => {
     };
     const trainees = await callApi('/trainee', 'get', query);
     if (trainees.data) {
+      console.log('getTrainee');
       const { data: { traineesList, total } } = trainees;
+      console.log(traineesList);
       setTraineesData({ dataCount: total, traineeData: traineesList });
-      localStorage.setItem('trainees', JSON.stringify(traineesData.traineeData));
+      console.log(traineesData);
       setLoading(false);
     } else {
       setLoading(false);
     }
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+    getTrainees();
+  };
+
   useEffect(() => {
     getTrainees();
+    console.log('useEffect');
   }, [loading, page]);
 
   const getDate = (date) => moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');

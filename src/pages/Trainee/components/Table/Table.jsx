@@ -57,7 +57,7 @@ const table = (props) => {
           <TableCell
             key={`${trainee[id]}${column.field}`}
             align={column.align}
-            onClick={() => onSelect(trainee[id])}
+            onClick={() => onSelect(trainee)}
           >
             <Typography>
               {

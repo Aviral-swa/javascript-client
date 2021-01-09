@@ -19,7 +19,8 @@ const callApi = async (route, method, body) => {
     const response = await axios[method](`${BASE_URL}${route}`, body, authHeader);
     return response.data;
   } catch (err) {
-    return err;
+    const { response: { data } } = err;
+    return data;
   }
 };
 

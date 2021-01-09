@@ -84,17 +84,17 @@ const TraineeList = (routerProps) => {
   };
 
   const handleOnClickEdit = (openSnackBar, value) => {
-    openSnackBar('Trainee Updated Successfully', 'success');
+    openSnackBar('Trainee updated successfully', 'success');
     console.log(value);
     setOpen({ ...open, editOpen: false });
   };
 
   const handleOnClickDelete = (openSnackBar) => {
     if (deleted.createdAt >= '2019-02-14') {
-      openSnackBar('Trainee Deleted Successfully', 'success');
+      openSnackBar('Trainee deleted successfully', 'success');
       console.log(deleted);
     } else {
-      openSnackBar('Cannot Delete Trainee', 'error');
+      openSnackBar('Cannot delete trainee', 'error');
     }
     setOpen({ ...open, deleteOpen: false });
   };
@@ -106,11 +106,8 @@ const TraineeList = (routerProps) => {
     };
     const trainees = await callApi('/trainee', 'get', query);
     if (trainees.data) {
-      console.log('getTrainee');
       const { data: { traineesList, total } } = trainees;
-      console.log(traineesList);
       setTraineesData({ dataCount: total, traineeData: traineesList });
-      console.log(traineesData);
       setLoading(false);
     } else {
       setLoading(false);
@@ -119,12 +116,10 @@ const TraineeList = (routerProps) => {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
-    getTrainees();
   };
 
   useEffect(() => {
     getTrainees();
-    console.log('useEffect');
   }, [loading, page]);
 
   const getDate = (date) => moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');

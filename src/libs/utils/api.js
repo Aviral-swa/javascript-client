@@ -20,6 +20,12 @@ const callApi = async (route, method, body) => {
     return response.data;
   } catch (err) {
     const { response: { data } } = err;
+    const errorResponse = {
+      message: 'Error occured',
+    };
+    if (!data.message) {
+      return errorResponse;
+    }
     return data;
   }
 };

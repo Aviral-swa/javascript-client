@@ -7,11 +7,7 @@ import {
   string, arrayOf, object, func, number,
 } from 'prop-types';
 
-const StyledTableCell = withStyles((theme) => ({
-  head: {
-    backgroundColor: theme.palette.grey[600],
-    color: theme.palette.common.white,
-  },
+const StyledTableCell = withStyles(() => ({
   body: {
     fontSize: 14,
   },

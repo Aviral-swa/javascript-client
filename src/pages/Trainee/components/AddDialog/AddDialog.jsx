@@ -169,6 +169,7 @@ const AddDialog = (props) => {
             disabled={(hasErrors()) || !isTouched() || loading}
             onClick={() => onSubmit(state)}
             color="primary"
+            variant="contained"
           >
             {loading && <CircularProgress size={24} />}
             Submit
@@ -180,10 +181,15 @@ const AddDialog = (props) => {
 };
 
 AddDialog.propTypes = {
-  open: bool.isRequired,
+  open: bool,
   onClose: func.isRequired,
   onSubmit: func.isRequired,
-  loading: bool.isRequired,
+  loading: bool,
+};
+
+AddDialog.defaultProps = {
+  open: false,
+  loading: false,
 };
 
 export default AddDialog;

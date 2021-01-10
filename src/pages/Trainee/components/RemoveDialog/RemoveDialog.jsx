@@ -1,13 +1,13 @@
 import React from 'react';
 import {
   Dialog, DialogActions, DialogContent, DialogTitle,
-  Button, DialogContentText,
+  Button, DialogContentText, CircularProgress,
 } from '@material-ui/core';
 import { bool, func } from 'prop-types';
 
 const RemoveDialog = (props) => {
   const {
-    open, onClose, onClickDelete,
+    open, onClose, onClickDelete, loading,
   } = props;
   return (
     <Dialog fullWidth maxWidth="md" open={open} onClose={onClose} aria-labelledby="form-dialog-title">
@@ -22,6 +22,7 @@ const RemoveDialog = (props) => {
           Cancel
         </Button>
         <Button variant="contained" onClick={() => onClickDelete()} color="primary">
+          {loading && <CircularProgress size={24} />}
           Delete
         </Button>
       </DialogActions>
@@ -30,9 +31,15 @@ const RemoveDialog = (props) => {
 };
 
 RemoveDialog.propTypes = {
-  open: bool.isRequired,
+  open: bool,
   onClose: func.isRequired,
   onClickDelete: func.isRequired,
+  loading: bool,
+};
+
+RemoveDialog.defaultProps = {
+  open: false,
+  loading: false,
 };
 
 export default RemoveDialog;

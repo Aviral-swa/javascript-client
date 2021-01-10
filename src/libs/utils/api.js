@@ -10,9 +10,10 @@ const callApi = async (route, method, body) => {
       params: {
         skip: body.skip,
         limit: body.limit,
+        id: body,
       },
     };
-    if (method === 'get') {
+    if (method === 'get' || 'delete') {
       const response = await axios[method](`${BASE_URL}${route}`, authHeader);
       return response.data;
     }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   Dialog, DialogActions, DialogContent, DialogTitle,
-  Button, DialogContentText, TextField, InputAdornment,
+  Button, DialogContentText, TextField, InputAdornment, CircularProgress,
 } from '@material-ui/core';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined';
@@ -10,7 +10,7 @@ import * as yup from 'yup';
 
 const EditDialog = (props) => {
   const {
-    open, onClose, onClickEdit, defaultValue,
+    open, onClose, onClickEdit, defaultValue, loading,
   } = props;
   const { name, email } = defaultValue;
 
@@ -136,11 +136,12 @@ const EditDialog = (props) => {
           Cancel
         </Button>
         <Button
-          disabled={(hasErrors()) || !isTouched()}
+          disabled={(hasErrors()) || !isTouched() || loading}
           onClick={() => onClickSubmit()}
           color="primary"
           variant="contained"
         >
+          {loading && <CircularProgress size={24} />}
           Submit
         </Button>
       </DialogActions>
@@ -149,10 +150,16 @@ const EditDialog = (props) => {
 };
 
 EditDialog.propTypes = {
-  open: bool.isRequired,
+  open: bool,
   onClose: func.isRequired,
   onClickEdit: func.isRequired,
   defaultValue: object.isRequired,
+  loading: bool,
+};
+
+EditDialog.defaultProps = {
+  loading: false,
+  open: false,
 };
 
 export default EditDialog;

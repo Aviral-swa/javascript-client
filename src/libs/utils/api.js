@@ -19,11 +19,14 @@ const callApi = async (route, method, body) => {
     const response = await axios[method](`${BASE_URL}${route}`, body, authHeader);
     return response.data;
   } catch (err) {
-    const { response: { data } } = err;
     const errorResponse = {
       message: 'Error occured',
     };
-    if (!data.message) {
+    if (err.message === 'Network Error') {
+      return errorResponse;
+    }
+    const { response: { data } } = err;
+    if (!data.response) {
       return errorResponse;
     }
     return data;

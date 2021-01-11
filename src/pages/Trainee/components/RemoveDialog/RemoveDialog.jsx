@@ -21,7 +21,12 @@ const RemoveDialog = (props) => {
         <Button onClick={onClose} color="primary">
           Cancel
         </Button>
-        <Button variant="contained" onClick={() => onClickDelete()} color="primary">
+        <Button
+          variant="contained"
+          onClick={() => onClickDelete()}
+          color="primary"
+          disabled={loading}
+        >
           {loading && <CircularProgress size={24} />}
           Delete
         </Button>

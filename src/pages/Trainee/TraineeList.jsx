@@ -130,7 +130,7 @@ const TraineeList = (routerProps) => {
       getTrainees();
     } else {
       setLoading({ ...loading, loadEdit: false });
-      openSnackBar(response.message, response.status);
+      openSnackBar(response.message, 'error');
     }
   };
 
@@ -140,9 +140,18 @@ const TraineeList = (routerProps) => {
       const response = await callApi(`/trainee/${deleted.originalId}`, 'delete', {});
       if (response.data) {
         setLoading({ ...loading, loadDelete: false });
-        openSnackBar(response.message, response.status);
-        setOpen({ ...open, deleteOpen: false });
-        getTrainees();
+        if (page > 0) {
+          const currentPage = page;
+          const newPage = currentPage - 1;
+          setPage(newPage);
+          setOpen({ ...open, deleteOpen: false });
+          openSnackBar(response.message, response.status);
+        }
+        if (page === 0) {
+          openSnackBar(response.message, response.status);
+          setOpen({ ...open, deleteOpen: false });
+          getTrainees();
+        }
       } else {
         setLoading({ ...loading, loadDelete: false });
         openSnackBar(response.message, 'error');
@@ -213,7 +222,7 @@ const TraineeList = (routerProps) => {
               onChangePage={handleChangePage}
               rowsPerPage={5}
               loading={loading.loadTable}
-              dataCount={traineesData.traineeData.length}
+              dataCount={traineesData.dataCount}
             />
             <AddDialog
               open={open.open}

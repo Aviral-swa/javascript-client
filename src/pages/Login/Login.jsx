@@ -45,14 +45,14 @@ const Login = (routerProps) => {
 
   const handleSubmit = async (openSnackBar) => {
     setTouched({ ...state, signIn: true });
-    const response = await callApi('/login', 'post', state);
-    if (response.generated_token) {
+    const response = await callApi('/user/login', 'post', state);
+    if (response.data) {
       setTouched({ ...state, signIn: false });
-      localStorage.setItem('token', response.generated_token);
+      localStorage.setItem('token', response.data.generated_token);
       routerProps.history.push('/add-trainee');
     } else {
       setTouched({ ...state, signIn: false });
-      openSnackBar('Login failed', 'error');
+      openSnackBar(response.message, 'error');
     }
   };
 

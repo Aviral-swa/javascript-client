@@ -24,6 +24,6 @@ SharedSnackbar.propTypes = {
 };
 SharedSnackbar.defaultProps = {
   message: '',
-  status: 'info',
+  status: 'error',
 };
 export default SharedSnackbar;

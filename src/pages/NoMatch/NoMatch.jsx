@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Typography, makeStyles, Container, CssBaseline, Button,
 } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 const NoMatch = () => {
   const useStyles = makeStyles({
@@ -58,9 +59,11 @@ const NoMatch = () => {
           <Typography className={classes.message}>
             Page not found
           </Typography>
-          <Button color="primary" variant="outlined" href="/" className={classes.login}>
-            Home
-          </Button>
+          <Link to="/add-trainee">
+            <Button color="primary" variant="outlined" className={classes.login}>
+              Home
+            </Button>
+          </Link>
         </Container>
       </div>
     </>

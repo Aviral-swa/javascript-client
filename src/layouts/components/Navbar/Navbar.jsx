@@ -22,7 +22,7 @@ const Navbar = () => {
   const classes = useStyles();
 
   const handleLogout = (openSnackBar) => {
-    localStorage.removeItem('token');
+    localStorage.clear();
     openSnackBar('Logout successfull', 'success');
   };
 

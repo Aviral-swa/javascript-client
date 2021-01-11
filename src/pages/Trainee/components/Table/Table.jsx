@@ -30,7 +30,6 @@ const table = (props) => {
     id, columns, data, onSort, orderBy, order, onSelect,
     count, rowsPerPage, page, onChangePage, actions,
   } = props;
-
   const renderHeader = () => (
     columns.map((column) => (
       <StyledTableCell key={column.label} align={column.align}>

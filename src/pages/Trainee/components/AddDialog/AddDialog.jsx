@@ -3,7 +3,7 @@ import { bool, func } from 'prop-types';
 import Button from '@material-ui/core/Button';
 import {
   Dialog, DialogActions, Grid, TextField, DialogContent,
-  DialogContentText, DialogTitle, InputAdornment,
+  DialogContentText, DialogTitle, InputAdornment, CircularProgress,
 } from '@material-ui/core';
 import VisibilityOffOutlinedIcon from '@material-ui/icons/VisibilityOffOutlined';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
@@ -11,7 +11,9 @@ import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined';
 import * as yup from 'yup';
 
 const AddDialog = (props) => {
-  const { open, onClose, onSubmit } = props;
+  const {
+    open, onClose, onSubmit, loading,
+  } = props;
 
   const [state, setState] = useState({
     name: '',
@@ -164,10 +166,11 @@ const AddDialog = (props) => {
             Cancel
           </Button>
           <Button
-            disabled={(hasErrors()) || !isTouched()}
+            disabled={(hasErrors()) || !isTouched() || loading}
             onClick={() => onSubmit(state)}
             color="primary"
           >
+            {loading && <CircularProgress size={24} />}
             Submit
           </Button>
         </DialogActions>
@@ -180,6 +183,7 @@ AddDialog.propTypes = {
   open: bool.isRequired,
   onClose: func.isRequired,
   onSubmit: func.isRequired,
+  loading: bool.isRequired,
 };
 
 export default AddDialog;

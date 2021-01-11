@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import EditIcon from '@material-ui/icons/Edit';
@@ -7,8 +7,9 @@ import moment from 'moment';
 import {
   AddDialog, Table, EditDialog, RemoveDialog,
 } from './components';
-import trainee from './data/trainee';
 import { SnackBarContext } from '../../contexts';
+import { callApi } from '../../libs/utils';
+import { withLoaderAndMessage } from '../../components';
 
 const TraineeList = (routerProps) => {
   const [open, setOpen] = useState({
@@ -24,6 +25,13 @@ const TraineeList = (routerProps) => {
     name: '',
     email: '',
   });
+  const [loading, setLoading] = useState(true);
+  const [traineesData, setTraineesData] = useState({
+    dataCount: 0,
+    traineeData: [],
+  });
+
+  const EnhancedTable = withLoaderAndMessage(Table);
 
   const handleSort = (property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -31,26 +39,30 @@ const TraineeList = (routerProps) => {
     setOrderBy(property);
   };
 
-  const handleSelect = (data) => {
-    routerProps.history.push(`/add-trainee/${data.id}`);
-  };
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const handleSelect = (trainee) => {
+    routerProps.history.push(`/add-trainee/${trainee.originalId}`);
+    localStorage.setItem('trainees', JSON.stringify(trainee));
   };
 
   const handleClickOpen = () => {
     setOpen({ ...open, open: true });
   };
-
-  const handleSumbit = (openSnackBar, state) => {
-    openSnackBar('Trainee added successfully', 'success');
-    console.log(state);
-    setOpen({ ...open, open: false });
+  const handleSumbit = async (openSnackBar, state) => {
+    const response = await callApi('/trainee', 'post', state);
+    setLoading(true);
+    if (response.data) {
+      setLoading(false);
+      openSnackBar(response.message, response.status);
+      setOpen({ ...open, open: false });
+    } else {
+      setLoading(false);
+      openSnackBar(response.message, response.status);
+    }
   };
 
   const handleClose = () => {
     setOpen({ ...open, open: false });
+    setLoading(false);
   };
 
   const handleEditDialogOpen = (traineeData) => {
@@ -87,6 +99,29 @@ const TraineeList = (routerProps) => {
     setOpen({ ...open, deleteOpen: false });
   };
 
+  const getTrainees = async () => {
+    const query = {
+      skip: page * 5,
+      limit: 5,
+    };
+    const trainees = await callApi('/trainee', 'get', query);
+    if (trainees.data) {
+      const { data: { traineesList, total } } = trainees;
+      setTraineesData({ dataCount: total, traineeData: traineesList });
+      setLoading(false);
+    } else {
+      setLoading(false);
+    }
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  useEffect(() => {
+    getTrainees();
+  }, [loading, page]);
+
   const getDate = (date) => moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');
   return (
     <SnackBarContext.Consumer>
@@ -101,9 +136,9 @@ const TraineeList = (routerProps) => {
             >
               Add Trainee
             </Button>
-            <Table
-              id="id"
-              data={trainee}
+            <EnhancedTable
+              id="_id"
+              data={traineesData.traineeData}
               columns={[{
                 field: 'name',
                 label: 'Name',
@@ -134,14 +169,18 @@ const TraineeList = (routerProps) => {
               orderBy={orderBy}
               onSort={handleSort}
               onSelect={handleSelect}
-              count={100}
+              count={traineesData.dataCount}
               page={page}
               onChangePage={handleChangePage}
+              rowsPerPage={5}
+              loading={loading}
+              dataCount={traineesData.traineeData.length}
             />
             <AddDialog
               open={open.open}
               onClose={handleClose}
               onSubmit={(state) => handleSumbit(openSnackBar, state)}
+              loading={loading}
             />
             <EditDialog
               open={open.editOpen}

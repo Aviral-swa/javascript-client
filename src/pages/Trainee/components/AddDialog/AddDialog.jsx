@@ -29,6 +29,21 @@ const AddDialog = (props) => {
     confirmPassword: false,
   });
 
+  const resetState = () => {
+    setState({
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    });
+    setTouched({
+      name: false,
+      email: false,
+      password: false,
+      confirmPassword: false,
+    });
+  };
+
   const handleChange = (field) => (event) => {
     setState({ ...state, [field]: event.target.value });
   };
@@ -167,7 +182,7 @@ const AddDialog = (props) => {
           </Button>
           <Button
             disabled={(hasErrors()) || !isTouched() || loading}
-            onClick={() => onSubmit(state)}
+            onClick={() => { onSubmit(state); resetState(); }}
             color="primary"
             variant="contained"
           >

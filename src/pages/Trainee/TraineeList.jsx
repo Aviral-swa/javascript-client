@@ -136,19 +136,20 @@ const TraineeList = (routerProps) => {
 
   const handleOnClickDelete = async (openSnackBar) => {
     setLoading({ ...loading, loadDelete: true });
-    const response = await callApi(`/trainee/${deleted.originalId}`, 'delete', {});
-    if (response.data) {
-      setLoading({ ...loading, loadDelete: false });
-      if (deleted.createdAt >= '2019-02-14') {
+    if (deleted.createdAt >= '2019-02-14') {
+      const response = await callApi(`/trainee/${deleted.originalId}`, 'delete', {});
+      if (response.data) {
+        setLoading({ ...loading, loadDelete: false });
         openSnackBar(response.message, response.status);
+        setOpen({ ...open, deleteOpen: false });
         getTrainees();
       } else {
-        openSnackBar('Cannot delete trainee', 'error');
+        setLoading({ ...loading, loadDelete: false });
+        openSnackBar(response.message, 'error');
       }
-      setOpen({ ...open, deleteOpen: false });
     } else {
       setLoading({ ...loading, loadDelete: false });
-      openSnackBar(response.message, response.status);
+      openSnackBar('Cannot delete trainee', 'error');
     }
   };
 

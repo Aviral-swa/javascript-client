@@ -10,10 +10,9 @@ const callApi = async (route, method, body) => {
       params: {
         skip: body.skip,
         limit: body.limit,
-        id: body,
       },
     };
-    if (method === 'get' || 'delete') {
+    if ((method === 'get') || (method === 'delete')) {
       const response = await axios[method](`${BASE_URL}${route}`, authHeader);
       return response.data;
     }
@@ -21,12 +20,18 @@ const callApi = async (route, method, body) => {
     return response.data;
   } catch (err) {
     const errorResponse = {
-      message: 'Error occured',
+      message: 'Something went wrong',
     };
     if (err.message === 'Network Error') {
       return errorResponse;
     }
-    const { response: { data } } = err;
+    const { response: { data }, response } = err;
+    if (response.status === 400) {
+      return errorResponse;
+    }
+    if (response.status === 403) {
+      return data;
+    }
     if (!data.response) {
       return errorResponse;
     }

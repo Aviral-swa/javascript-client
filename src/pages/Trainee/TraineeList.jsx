@@ -36,6 +36,7 @@ const TraineeList = (routerProps) => {
     dataCount: 0,
     traineeData: [],
   });
+  const [countPageData, setCountPageData] = useState(0);
 
   const EnhancedTable = withLoaderAndMessage(Table);
 
@@ -61,8 +62,9 @@ const TraineeList = (routerProps) => {
     };
     const trainees = await callApi('/trainee', 'get', query);
     if (trainees.data) {
-      const { data: { traineesList, total } } = trainees;
-      setTraineesData({ dataCount: total, traineeData: traineesList });
+      const { data: { traineesList, total, showing } } = trainees;
+      setTraineesData({ ...traineesData, dataCount: total, traineeData: traineesList });
+      setCountPageData(showing);
       setLoading({ ...loading, loadTable: false });
     } else {
       setLoading({ ...loading, loadTable: false });
@@ -79,7 +81,7 @@ const TraineeList = (routerProps) => {
       getTrainees();
     } else {
       setLoading({ ...loading, loadAdd: false });
-      openSnackBar(response.message, response.status);
+      openSnackBar(response.message, 'error');
     }
   };
 
@@ -140,17 +142,19 @@ const TraineeList = (routerProps) => {
       const response = await callApi(`/trainee/${deleted.originalId}`, 'delete', {});
       if (response.data) {
         setLoading({ ...loading, loadDelete: false });
+        getTrainees();
         if (page > 0) {
-          const currentPage = page;
-          const newPage = currentPage - 1;
-          setPage(newPage);
+          if (countPageData === 1) {
+            const currentPage = page;
+            const newPage = currentPage - 1;
+            setPage(newPage);
+          }
           setOpen({ ...open, deleteOpen: false });
           openSnackBar(response.message, response.status);
         }
         if (page === 0) {
           openSnackBar(response.message, response.status);
           setOpen({ ...open, deleteOpen: false });
-          getTrainees();
         }
       } else {
         setLoading({ ...loading, loadDelete: false });

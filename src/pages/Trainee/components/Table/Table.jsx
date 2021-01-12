@@ -113,7 +113,7 @@ const table = (props) => {
 table.propTypes = {
   id: string.isRequired,
   columns: arrayOf(object).isRequired,
-  data: arrayOf(object).isRequired,
+  data: arrayOf(object),
   order: string,
   orderBy: string,
   onSort: func.isRequired,
@@ -131,6 +131,7 @@ table.defaultProps = {
   page: 0,
   rowsPerPage: 5,
   actions: [{}],
+  data: [{}],
 };
 
 export default table;

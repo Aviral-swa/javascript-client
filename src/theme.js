@@ -3,8 +3,8 @@ import { createMuiTheme } from '@material-ui/core';
 const theme = createMuiTheme({
   typography: {
     fontFamily: [
-      'Comic Sans MS',
       'sans-serif',
+      'Comic Sans MS',
       'cursive',
     ],
     fontSize: 13,

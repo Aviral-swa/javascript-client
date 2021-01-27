@@ -4,14 +4,14 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import moment from 'moment';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import {
   AddDialog, Table, EditDialog, RemoveDialog,
 } from './components';
 import { SnackBarContext } from '../../contexts';
-import { callApi } from '../../libs/utils';
 import { withLoaderAndMessage } from '../../components';
 import getAllTrainees from './query';
+import { CREATE_TRAINEE, EDIT_TRAINEE, DELETE_TRAINEE } from './mutation';
 
 const TraineeList = (routerProps) => {
   const [open, setOpen] = useState({
@@ -77,17 +77,27 @@ const TraineeList = (routerProps) => {
     }
   };
 
+  const [addTrainee] = useMutation(CREATE_TRAINEE);
+
   const handleSumbit = async (openSnackBar, state) => {
     setLoading({ ...loadingSpin, loadAdd: true });
-    const response = await callApi('/trainee', 'post', state);
-    if (response.data) {
+    try {
+      const response = await addTrainee({
+        variables: { name: state.name, email: state.email, password: state.password },
+      });
+      const { data: { createTrainee: { message, status } } } = response;
+      if (status) {
+        setLoading({ ...loadingSpin, loadAdd: false });
+        openSnackBar(message, status);
+        setOpen({ ...open, open: false });
+        refetch();
+      } else {
+        setLoading({ ...loadingSpin, loadAdd: false });
+        openSnackBar(message, 'error');
+      }
+    } catch (err) {
       setLoading({ ...loadingSpin, loadAdd: false });
-      openSnackBar(response.message, response.status);
-      setOpen({ ...open, open: false });
-      refetch();
-    } else {
-      setLoading({ ...loadingSpin, loadAdd: false });
-      openSnackBar(response.message, 'error');
+      openSnackBar(err.message, 'error');
     }
   };
 
@@ -121,50 +131,63 @@ const TraineeList = (routerProps) => {
     setOpen({ ...open, deleteOpen: false });
   };
 
+  const [editTrainee] = useMutation(EDIT_TRAINEE);
+
   const handleOnClickEdit = async (openSnackBar, value) => {
     setLoading({ ...loadingSpin, loadEdit: true });
-    const dataToUpdate = {
-      originalId: prefill.id,
-      dataToUpdate: {
-        name: value.Name,
-        email: value.Email,
-      },
-    };
-    const response = await callApi('/trainee', 'put', dataToUpdate);
-    if (response.data) {
+    try {
+      const response = await editTrainee({
+        variables: { id: prefill.id, name: value.Name, email: value.Email },
+      });
+      const { data: { updateTrainee: { message, status } } } = response;
+      if (status) {
+        setLoading({ ...loadingSpin, loadEdit: false });
+        openSnackBar(message, status);
+        setOpen({ ...open, editOpen: false });
+        refetch();
+      } else {
+        setLoading({ ...loadingSpin, loadEdit: false });
+        openSnackBar(message, 'error');
+      }
+    } catch (err) {
       setLoading({ ...loadingSpin, loadEdit: false });
-      openSnackBar(response.message, response.status);
-      setOpen({ ...open, editOpen: false });
-      refetch();
-    } else {
-      setLoading({ ...loadingSpin, loadEdit: false });
-      openSnackBar(response.message, 'error');
+      openSnackBar(err.message, 'error');
     }
   };
+
+  const [deleteTrainee] = useMutation(DELETE_TRAINEE);
 
   const handleOnClickDelete = async (openSnackBar) => {
     setLoading({ ...loadingSpin, loadDelete: true });
     if (deleted.createdAt >= '2019-02-14') {
-      const response = await callApi(`/trainee/${deleted.originalId}`, 'delete', {});
-      if (response.data) {
-        setLoading({ ...loadingSpin, loadDelete: false });
-        refetch();
-        if (page > 0) {
-          if (countPageData === 1) {
-            const currentPage = page;
-            const newPage = currentPage - 1;
-            setPage(newPage);
+      try {
+        const response = await deleteTrainee({
+          variables: { id: deleted.originalId },
+        });
+        const { data: { deleteTrainee: { message, status } } } = response;
+        if (status) {
+          setLoading({ ...loadingSpin, loadDelete: false });
+          refetch();
+          if (page > 0) {
+            if (countPageData === 1) {
+              const currentPage = page;
+              const newPage = currentPage - 1;
+              setPage(newPage);
+            }
+            setOpen({ ...open, deleteOpen: false });
+            openSnackBar(message, status);
           }
-          setOpen({ ...open, deleteOpen: false });
-          openSnackBar(response.message, response.status);
+          if (page === 0) {
+            openSnackBar(message, status);
+            setOpen({ ...open, deleteOpen: false });
+          }
+        } else {
+          setLoading({ ...loadingSpin, loadDelete: false });
+          openSnackBar(message, 'error');
         }
-        if (page === 0) {
-          openSnackBar(response.message, response.status);
-          setOpen({ ...open, deleteOpen: false });
-        }
-      } else {
+      } catch (err) {
         setLoading({ ...loadingSpin, loadDelete: false });
-        openSnackBar(response.message, 'error');
+        openSnackBar(err.message, 'error');
       }
     } else {
       setLoading({ ...loadingSpin, loadDelete: false });

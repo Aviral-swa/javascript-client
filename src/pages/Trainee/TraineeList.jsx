@@ -4,12 +4,14 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import moment from 'moment';
+import { useQuery } from '@apollo/client';
 import {
   AddDialog, Table, EditDialog, RemoveDialog,
 } from './components';
 import { SnackBarContext } from '../../contexts';
 import { callApi } from '../../libs/utils';
 import { withLoaderAndMessage } from '../../components';
+import getAllTrainees from './query';
 
 const TraineeList = (routerProps) => {
   const [open, setOpen] = useState({
@@ -26,7 +28,7 @@ const TraineeList = (routerProps) => {
     email: '',
     id: '',
   });
-  const [loading, setLoading] = useState({
+  const [loadingSpin, setLoading] = useState({
     loadTable: true,
     loadAdd: false,
     loadEdit: false,
@@ -55,39 +57,43 @@ const TraineeList = (routerProps) => {
     setOpen({ ...open, open: true });
   };
 
-  const getTrainees = async () => {
-    const query = {
+  const { data, loading, refetch } = useQuery(getAllTrainees, {
+    variables: {
       skip: page * 5,
       limit: 5,
-    };
-    const trainees = await callApi('/trainee', 'get', query);
-    if (trainees.data) {
-      const { data: { traineesList, total, showing } } = trainees;
-      setTraineesData({ ...traineesData, dataCount: total, traineeData: traineesList });
-      setCountPageData(showing);
-      setLoading({ ...loading, loadTable: false });
+    },
+  });
+
+  const getTrainees = () => {
+    if (!loading) {
+      if (data) {
+        const { data: { traineesList, total, showing } } = data.getAllTrainees;
+        setTraineesData({ ...traineesData, dataCount: total, traineeData: traineesList });
+        setCountPageData(showing);
+        setLoading({ ...loadingSpin, loadTable: false });
+      }
     } else {
-      setLoading({ ...loading, loadTable: false });
+      setLoading({ ...loadingSpin, loadTable: true });
     }
   };
 
   const handleSumbit = async (openSnackBar, state) => {
-    setLoading({ ...loading, loadAdd: true });
+    setLoading({ ...loadingSpin, loadAdd: true });
     const response = await callApi('/trainee', 'post', state);
     if (response.data) {
-      setLoading({ ...loading, loadAdd: false });
+      setLoading({ ...loadingSpin, loadAdd: false });
       openSnackBar(response.message, response.status);
       setOpen({ ...open, open: false });
-      getTrainees();
+      refetch();
     } else {
-      setLoading({ ...loading, loadAdd: false });
+      setLoading({ ...loadingSpin, loadAdd: false });
       openSnackBar(response.message, 'error');
     }
   };
 
   const handleClose = () => {
     setOpen({ ...open, open: false });
-    setLoading({ ...loading, loadAdd: false });
+    setLoading({ ...loadingSpin, loadAdd: false });
   };
 
   const handleEditDialogOpen = (traineeData) => {
@@ -116,7 +122,7 @@ const TraineeList = (routerProps) => {
   };
 
   const handleOnClickEdit = async (openSnackBar, value) => {
-    setLoading({ ...loading, loadEdit: true });
+    setLoading({ ...loadingSpin, loadEdit: true });
     const dataToUpdate = {
       originalId: prefill.id,
       dataToUpdate: {
@@ -126,23 +132,23 @@ const TraineeList = (routerProps) => {
     };
     const response = await callApi('/trainee', 'put', dataToUpdate);
     if (response.data) {
-      setLoading({ ...loading, loadEdit: false });
+      setLoading({ ...loadingSpin, loadEdit: false });
       openSnackBar(response.message, response.status);
       setOpen({ ...open, editOpen: false });
-      getTrainees();
+      refetch();
     } else {
-      setLoading({ ...loading, loadEdit: false });
+      setLoading({ ...loadingSpin, loadEdit: false });
       openSnackBar(response.message, 'error');
     }
   };
 
   const handleOnClickDelete = async (openSnackBar) => {
-    setLoading({ ...loading, loadDelete: true });
+    setLoading({ ...loadingSpin, loadDelete: true });
     if (deleted.createdAt >= '2019-02-14') {
       const response = await callApi(`/trainee/${deleted.originalId}`, 'delete', {});
       if (response.data) {
-        setLoading({ ...loading, loadDelete: false });
-        getTrainees();
+        setLoading({ ...loadingSpin, loadDelete: false });
+        refetch();
         if (page > 0) {
           if (countPageData === 1) {
             const currentPage = page;
@@ -157,11 +163,11 @@ const TraineeList = (routerProps) => {
           setOpen({ ...open, deleteOpen: false });
         }
       } else {
-        setLoading({ ...loading, loadDelete: false });
+        setLoading({ ...loadingSpin, loadDelete: false });
         openSnackBar(response.message, 'error');
       }
     } else {
-      setLoading({ ...loading, loadDelete: false });
+      setLoading({ ...loadingSpin, loadDelete: false });
       openSnackBar('Cannot delete trainee', 'error');
     }
   };
@@ -172,7 +178,7 @@ const TraineeList = (routerProps) => {
 
   useEffect(() => {
     getTrainees();
-  }, [page]);
+  }, [page, data]);
 
   const getDate = (date) => moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');
   return (
@@ -189,7 +195,7 @@ const TraineeList = (routerProps) => {
               Add Trainee
             </Button>
             <EnhancedTable
-              id="_id"
+              id="originalId"
               data={traineesData.traineeData}
               columns={[{
                 field: 'name',
@@ -225,27 +231,27 @@ const TraineeList = (routerProps) => {
               page={page}
               onChangePage={handleChangePage}
               rowsPerPage={5}
-              loading={loading.loadTable}
+              loading={loadingSpin.loadTable}
               dataCount={traineesData.dataCount}
             />
             <AddDialog
               open={open.open}
               onClose={handleClose}
               onSubmit={(state) => handleSumbit(openSnackBar, state)}
-              loading={loading.loadAdd}
+              loading={loadingSpin.loadAdd}
             />
             <EditDialog
               open={open.editOpen}
               onClose={handleEditClose}
               onClickEdit={(value) => handleOnClickEdit(openSnackBar, value)}
               defaultValue={prefill}
-              loading={loading.loadEdit}
+              loading={loadingSpin.loadEdit}
             />
             <RemoveDialog
               open={open.deleteOpen}
               onClose={handleDeleteClose}
               onClickDelete={() => handleOnClickDelete(openSnackBar)}
-              loading={loading.loadDelete}
+              loading={loadingSpin.loadDelete}
             />
           </div>
         )

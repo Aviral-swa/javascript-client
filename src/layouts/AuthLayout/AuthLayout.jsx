@@ -1,18 +1,17 @@
-import { object } from 'prop-types';
+import { node } from 'prop-types';
 import React from 'react';
-import { Login } from '../../pages';
 import { Footer } from '../components/Footer';
 
-const AuthLayout = ({ history }) => (
+const AuthLayout = ({ children }) => (
   <>
-    <Login history={history} />
+    {children}
     <br />
     <Footer />
   </>
 );
 
 AuthLayout.propTypes = {
-  history: object.isRequired,
+  children: node.isRequired,
 };
 
 export default AuthLayout;

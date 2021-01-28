@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
+import { useMutation } from '@apollo/client';
 import {
   Avatar, Button, CssBaseline, TextField, Typography, makeStyles, Container,
   CircularProgress,
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import * as yup from 'yup';
-import { callApi } from '../../libs/utils';
 import { SnackBarContext } from '../../contexts';
+import login from './mutation';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -39,20 +40,30 @@ const Login = (routerProps) => {
     email: false, password: false, signIn: false,
   });
 
+  const [loginUser] = useMutation(login);
+
   const handleChange = (field) => (event) => {
     setState({ ...state, [field]: event.target.value });
   };
 
   const handleSubmit = async (openSnackBar) => {
     setTouched({ ...state, signIn: true });
-    const response = await callApi('/user/login', 'post', state);
-    if (response.data) {
+    try {
+      const response = await loginUser({
+        variables: { email: state.email, password: state.password },
+      });
+      const { data: { loginUser: { data, message } } } = response;
+      if (data) {
+        setTouched({ ...state, signIn: false });
+        localStorage.setItem('token', data.generated_token);
+        routerProps.history.push('/add-trainee');
+      } else {
+        setTouched({ ...state, signIn: false });
+        openSnackBar(message, 'error');
+      }
+    } catch (err) {
       setTouched({ ...state, signIn: false });
-      localStorage.setItem('token', response.data.generated_token);
-      routerProps.history.push('/add-trainee');
-    } else {
-      setTouched({ ...state, signIn: false });
-      openSnackBar(response.message, 'error');
+      openSnackBar(err.message, 'error');
     }
   };
 

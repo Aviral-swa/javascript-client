@@ -25,7 +25,11 @@ const withLoaderAndMessage = (WrappedComponent) => {
 
   WithLoaderAndMessage.propTypes = {
     loading: bool.isRequired,
-    dataCount: number.isRequired,
+    dataCount: number,
+  };
+
+  WithLoaderAndMessage.defaultProps = {
+    dataCount: 0,
   };
 
   return WithLoaderAndMessage;

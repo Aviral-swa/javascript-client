@@ -12,6 +12,7 @@ import { SnackBarContext } from '../../contexts';
 import { withLoaderAndMessage } from '../../components';
 import getAllTrainees from './query';
 import { CREATE_TRAINEE, EDIT_TRAINEE, DELETE_TRAINEE } from './mutation';
+import { UPDATE_TRAINEE, TRAINEE_DELETED, TRAINEE_ADDED } from './subscription';
 
 const TraineeList = (routerProps) => {
   const [open, setOpen] = useState({
@@ -29,16 +30,10 @@ const TraineeList = (routerProps) => {
     id: '',
   });
   const [loadingSpin, setLoading] = useState({
-    loadTable: true,
     loadAdd: false,
     loadEdit: false,
     loadDelete: false,
   });
-  const [traineesData, setTraineesData] = useState({
-    dataCount: 0,
-    traineeData: [],
-  });
-  const [countPageData, setCountPageData] = useState(0);
 
   const EnhancedTable = withLoaderAndMessage(Table);
 
@@ -57,25 +52,94 @@ const TraineeList = (routerProps) => {
     setOpen({ ...open, open: true });
   };
 
-  const { data, loading, refetch } = useQuery(getAllTrainees, {
+  const {
+    data = {}, loading, subscribeToMore,
+  } = useQuery(getAllTrainees, {
     variables: {
       skip: page * 5,
       limit: 5,
     },
+    fetchPolicy: 'cache-and-network',
   });
+  let tableRecords;
+  let totalData;
+  if (!loading && data) {
+    const { data: { traineesList = [{}], total = 0 } = {} } = data.getAllTrainees;
+    tableRecords = traineesList;
+    totalData = total;
+  }
 
-  const getTrainees = () => {
-    if (!loading) {
-      if (data) {
-        const { data: { traineesList, total, showing } } = data.getAllTrainees;
-        setTraineesData({ ...traineesData, dataCount: total, traineeData: traineesList });
-        setCountPageData(showing);
-        setLoading({ ...loadingSpin, loadTable: false });
-      }
-    } else {
-      setLoading({ ...loadingSpin, loadTable: true });
-    }
-  };
+  useEffect(() => {
+    subscribeToMore({
+      document: TRAINEE_ADDED,
+      updateQuery: (previous, { subscriptionData }) => {
+        if (!subscriptionData) return previous;
+        const { traineeAdded: { data: addedTrainee } } = subscriptionData.data;
+        const { data: { traineesList = [{}] } = {} } = previous.getAllTrainees;
+        let updatedList;
+        if (traineesList) {
+          updatedList = [
+            addedTrainee,
+            ...traineesList,
+          ];
+        }
+        return {
+          getAllTrainees: {
+            ...previous.getAllTrainees,
+            data: {
+              total: previous.getAllTrainees.data.total + 1,
+              traineesList: updatedList,
+            },
+          },
+        };
+      },
+    });
+    subscribeToMore({
+      document: UPDATE_TRAINEE,
+      updateQuery: (previous, { subscriptionData }) => {
+        if (!subscriptionData) return previous;
+        const { data: { traineesList } } = previous.getAllTrainees;
+        const { traineeUpdated: { data: records } } = subscriptionData.data;
+        const updatedList = [...traineesList].map((trainee) => {
+          if (trainee.originalId === records.originalId) {
+            return {
+              ...trainee,
+              ...records,
+            };
+          }
+          return trainee;
+        });
+        return {
+          getAllTrainees: {
+            ...previous.getAllTrainees,
+            data: {
+              traineesList: updatedList,
+            },
+          },
+        };
+      },
+    });
+    subscribeToMore({
+      document: TRAINEE_DELETED,
+      updateQuery: (previous, { subscriptionData }) => {
+        if (!subscriptionData) return previous;
+        const { data: { traineesList } } = previous.getAllTrainees;
+        const { traineeDeleted: { data: deletedTrainee } } = subscriptionData.data;
+        const updatedList = [...traineesList].filter((trainee) => (
+          trainee.originalId !== deletedTrainee
+        ));
+        return {
+          getAllTrainees: {
+            ...previous.getAllTrainees,
+            data: {
+              total: previous.getAllTrainees.data.total - 1,
+              traineesList: updatedList,
+            },
+          },
+        };
+      },
+    });
+  }, []);
 
   const [addTrainee] = useMutation(CREATE_TRAINEE);
 
@@ -90,7 +154,6 @@ const TraineeList = (routerProps) => {
         setLoading({ ...loadingSpin, loadAdd: false });
         openSnackBar(message, status);
         setOpen({ ...open, open: false });
-        refetch();
       } else {
         setLoading({ ...loadingSpin, loadAdd: false });
         openSnackBar(message, 'error');
@@ -140,11 +203,10 @@ const TraineeList = (routerProps) => {
         variables: { id: prefill.id, name: value.Name, email: value.Email },
       });
       const { data: { updateTrainee: { message, status } } } = response;
-      if (status) {
+      if (status === 'success') {
         setLoading({ ...loadingSpin, loadEdit: false });
         openSnackBar(message, status);
         setOpen({ ...open, editOpen: false });
-        refetch();
       } else {
         setLoading({ ...loadingSpin, loadEdit: false });
         openSnackBar(message, 'error');
@@ -165,22 +227,13 @@ const TraineeList = (routerProps) => {
           variables: { id: deleted.originalId },
         });
         const { data: { deleteTrainee: { message, status } } } = response;
-        if (status) {
+        if (status === 'success') {
           setLoading({ ...loadingSpin, loadDelete: false });
-          refetch();
-          if (page > 0) {
-            if (countPageData === 1) {
-              const currentPage = page;
-              const newPage = currentPage - 1;
-              setPage(newPage);
-            }
-            setOpen({ ...open, deleteOpen: false });
-            openSnackBar(message, status);
+          if (page > 0 && tableRecords.length === 1) {
+            setPage(page - 1);
           }
-          if (page === 0) {
-            openSnackBar(message, status);
-            setOpen({ ...open, deleteOpen: false });
-          }
+          setOpen({ ...open, deleteOpen: false });
+          openSnackBar(message, status);
         } else {
           setLoading({ ...loadingSpin, loadDelete: false });
           openSnackBar(message, 'error');
@@ -199,10 +252,6 @@ const TraineeList = (routerProps) => {
     setPage(newPage);
   };
 
-  useEffect(() => {
-    getTrainees();
-  }, [page, data]);
-
   const getDate = (date) => moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');
   return (
     <SnackBarContext.Consumer>
@@ -219,7 +268,7 @@ const TraineeList = (routerProps) => {
             </Button>
             <EnhancedTable
               id="originalId"
-              data={traineesData.traineeData}
+              data={tableRecords}
               columns={[{
                 field: 'name',
                 label: 'Name',
@@ -250,12 +299,12 @@ const TraineeList = (routerProps) => {
               orderBy={orderBy}
               onSort={handleSort}
               onSelect={handleSelect}
-              count={traineesData.dataCount}
+              count={totalData}
               page={page}
               onChangePage={handleChangePage}
               rowsPerPage={5}
-              loading={loadingSpin.loadTable}
-              dataCount={traineesData.dataCount}
+              loading={loading}
+              dataCount={totalData}
             />
             <AddDialog
               open={open.open}

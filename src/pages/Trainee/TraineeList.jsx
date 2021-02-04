@@ -143,11 +143,12 @@ const TraineeList = (routerProps) => {
 
   const [addTrainee] = useMutation(CREATE_TRAINEE);
 
-  const handleSumbit = async (openSnackBar, state) => {
+  const handleSumbit = async (openSnackBar, traineeToAdd) => {
     setLoading({ ...loadingSpin, loadAdd: true });
     try {
       const response = await addTrainee({
-        variables: { name: state.name, email: state.email, password: state.password },
+        variables:
+        { name: traineeToAdd.name, email: traineeToAdd.email, password: traineeToAdd.password },
       });
       const { data: { createTrainee: { message, status } } } = response;
       if (status) {
@@ -196,11 +197,11 @@ const TraineeList = (routerProps) => {
 
   const [editTrainee] = useMutation(EDIT_TRAINEE);
 
-  const handleOnClickEdit = async (openSnackBar, value) => {
+  const handleOnClickEdit = async (openSnackBar, traineeToUpdate) => {
     setLoading({ ...loadingSpin, loadEdit: true });
     try {
       const response = await editTrainee({
-        variables: { id: prefill.id, name: value.Name, email: value.Email },
+        variables: { id: prefill.id, name: traineeToUpdate.Name, email: traineeToUpdate.Email },
       });
       const { data: { updateTrainee: { message, status } } } = response;
       if (status === 'success') {

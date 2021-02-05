@@ -23,7 +23,7 @@ const withLoaderAndMessage = (WrappedComponent) => {
     }
     if (!dataCount) {
       return (
-        <Typography variant="h3">
+        <Typography variant="h3" align="center">
           OOPS!, No Trainees Found
         </Typography>
       );

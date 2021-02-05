@@ -13,6 +13,7 @@ import { withLoaderAndMessage } from '../../components';
 import getAllTrainees from './query';
 import { CREATE_TRAINEE, EDIT_TRAINEE, DELETE_TRAINEE } from './mutation';
 import { UPDATE_TRAINEE, TRAINEE_DELETED, TRAINEE_ADDED } from './subscription';
+import { getExpTime } from '../../libs/utils/sessionVerify';
 
 const TraineeList = (routerProps) => {
   const [open, setOpen] = useState({
@@ -64,9 +65,14 @@ const TraineeList = (routerProps) => {
   let tableRecords;
   let totalData;
   if (!loading && data) {
-    const { data: { traineesList = [{}], total = 0 } = {} } = data.getAllTrainees;
-    tableRecords = traineesList;
-    totalData = total;
+    try {
+      const { data: { traineesList = [{}], total = 0 } = {} } = data.getAllTrainees;
+      tableRecords = traineesList;
+      totalData = total;
+    } catch {
+      tableRecords = [];
+      totalData = 0;
+    }
   }
 
   useEffect(() => {
@@ -151,7 +157,7 @@ const TraineeList = (routerProps) => {
         { name: traineeToAdd.name, email: traineeToAdd.email, password: traineeToAdd.password },
       });
       const { data: { createTrainee: { message, status } } } = response;
-      if (status) {
+      if (status === 'success') {
         setLoading({ ...loadingSpin, loadAdd: false });
         openSnackBar(message, status);
         setOpen({ ...open, open: false });
@@ -253,6 +259,17 @@ const TraineeList = (routerProps) => {
     setPage(newPage);
   };
 
+  useEffect(() => {
+    const session = setTimeout(() => {
+      localStorage.clear();
+      alert('Session expired');
+      routerProps.history.push('/login');
+    }, getExpTime());
+    return () => {
+      clearTimeout(session);
+    };
+  }, []);
+
   const getDate = (date) => moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');
   return (
     <SnackBarContext.Consumer>
@@ -264,6 +281,7 @@ const TraineeList = (routerProps) => {
               color="primary"
               startIcon={<PersonAddIcon />}
               onClick={handleClickOpen}
+              style={{ marginBottom: '20px' }}
             >
               Add Trainee
             </Button>

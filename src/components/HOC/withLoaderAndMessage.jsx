@@ -23,7 +23,7 @@ const withLoaderAndMessage = (WrappedComponent) => {
     }
     if (!dataCount) {
       return (
-        <Typography variant="h3">
+        <Typography variant="h3" align="center">
           OOPS!, No Trainees Found
         </Typography>
       );
@@ -35,7 +35,11 @@ const withLoaderAndMessage = (WrappedComponent) => {
 
   WithLoaderAndMessage.propTypes = {
     loading: bool.isRequired,
-    dataCount: number.isRequired,
+    dataCount: number,
+  };
+
+  WithLoaderAndMessage.defaultProps = {
+    dataCount: 0,
   };
 
   return WithLoaderAndMessage;

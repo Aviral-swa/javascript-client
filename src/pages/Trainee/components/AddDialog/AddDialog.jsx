@@ -97,9 +97,10 @@ const AddDialog = (props) => {
   };
 
   const renderFormField = ({
-    label, type, icon, field,
+    label, type, icon, field, id,
   }) => (
     <TextField
+      id={id}
       error={!!getError(field)}
       required
       variant="outlined"
@@ -121,8 +122,8 @@ const AddDialog = (props) => {
   );
 
   return (
-    <div>
-      <Dialog open={open} fullWidth maxWidth="md" onClose={onClose}>
+    <div id="dialog">
+      <Dialog id="add-dialog" open={open} fullWidth maxWidth="md" onClose={onClose}>
         <DialogTitle id="form-dialog-title">Add Trainee</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -133,6 +134,7 @@ const AddDialog = (props) => {
               <Grid item md={12}>
                 {
                   renderFormField({
+                    id: 'name-field',
                     label: 'Name',
                     field: 'name',
                     type: 'text',

@@ -2,15 +2,15 @@ import {
   bool, func, objectOf, string,
 } from 'prop-types';
 import React from 'react';
-import Buttons from './style';
+import Button from './style';
 
-const Button = (props) => {
+const ButtonComponent = (props) => {
   const {
     highlight, disabled, style, value, onClick,
   } = props;
   if (highlight && !disabled) {
     return (
-      <Buttons
+      <Button
         type="submit"
         disabled={disabled}
         highlight={highlight}
@@ -18,23 +18,23 @@ const Button = (props) => {
         onClick={onClick}
       >
         {value}
-      </Buttons>
+      </Button>
     );
   }
 
   return (
-    <Buttons
+    <Button
       type="submit"
       disabled={disabled}
       style={style}
       onClick={onClick}
     >
       {value}
-    </Buttons>
+    </Button>
   );
 };
 
-Button.propTypes = {
+ButtonComponent.propTypes = {
   highlight: bool,
   disabled: bool,
   style: objectOf(string),
@@ -42,10 +42,10 @@ Button.propTypes = {
   onClick: func.isRequired,
 };
 
-Button.defaultProps = {
+ButtonComponent.defaultProps = {
   highlight: false,
   disabled: false,
   style: {},
 };
 
-export default Button;
+export default ButtonComponent;

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const Buttons = styled.button`
+const Button = styled.button`
   padding: 8px 17px;
   margin-top: 10px;
   margin-right: 4px;
@@ -12,4 +12,6 @@ const Buttons = styled.button`
   color: ${(props) => (props.highlight ? 'white' : 'black')};
 `;
 
-export default Buttons;
+Button.displayName = 'Button';
+
+export default Button;

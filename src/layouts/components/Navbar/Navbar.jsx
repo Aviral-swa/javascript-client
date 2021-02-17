@@ -49,6 +49,9 @@ const Navbar = () => {
                 <Link to="/children-demo">
                   <Button className={classes.button}>CHILDREN DEMO</Button>
                 </Link>
+                <Link to="/unitTest-demo">
+                  <Button className={classes.button}>TESTING DEMO</Button>
+                </Link>
                 <Link to="/login">
                   <Button
                     className={classes.button}

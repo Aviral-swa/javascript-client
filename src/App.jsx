@@ -11,6 +11,7 @@ import {
   ChildrenDemo, TextFieldDemo, InputDemo,
   NoMatch, Login, Trainee,
 } from './pages';
+import { TestingApp } from './components';
 
 const App = () => (
   <ThemeProvider theme={theme}>
@@ -24,6 +25,7 @@ const App = () => (
             <PrivateRoute exact path="/input-demo" component={InputDemo} />
             <PrivateRoute exact path="/children-demo" component={ChildrenDemo} />
             <PrivateRoute exact path="/textfield-demo" component={TextFieldDemo} />
+            <PrivateRoute exact path="/unitTest-demo" component={TestingApp} />
             <PrivateRoute path="/add-trainee" component={Trainee} />
             <PrivateRoute default component={NoMatch} />
           </Switch>

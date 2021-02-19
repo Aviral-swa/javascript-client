@@ -6,10 +6,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import moment from 'moment';
 import { useQuery, useMutation } from '@apollo/client';
 import {
-  AddDialog, Table, EditDialog, RemoveDialog,
+  AddDialog, EditDialog, RemoveDialog,
 } from './components';
 import { SnackBarContext } from '../../contexts';
-import { withLoaderAndMessage } from '../../components';
+import { withLoaderAndMessage, Table } from '../../components';
 import getAllTrainees from './query';
 import { CREATE_TRAINEE, EDIT_TRAINEE, DELETE_TRAINEE } from './mutation';
 import { UPDATE_TRAINEE, TRAINEE_DELETED, TRAINEE_ADDED } from './subscription';
@@ -324,6 +324,7 @@ const TraineeList = (routerProps) => {
               rowsPerPage={5}
               loading={loading}
               dataCount={totalData}
+              message="OOPS!, No Trainees Found"
             />
             <AddDialog
               open={open.open}

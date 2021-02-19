@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import { Typography, CircularProgress, makeStyles } from '@material-ui/core';
-import { bool, number } from 'prop-types';
+import { bool, number, string } from 'prop-types';
 
 const useStyles = makeStyles(() => ({
   spinner: {
@@ -14,7 +14,9 @@ const useStyles = makeStyles(() => ({
 }));
 const withLoaderAndMessage = (WrappedComponent) => {
   const WithLoaderAndMessage = (props) => {
-    const { loading, dataCount, ...rest } = props;
+    const {
+      loading, dataCount, message, ...rest
+    } = props;
     const style = useStyles();
     if (loading) {
       return (
@@ -24,7 +26,7 @@ const withLoaderAndMessage = (WrappedComponent) => {
     if (!dataCount) {
       return (
         <Typography variant="h3" align="center">
-          OOPS!, No Trainees Found
+          { message }
         </Typography>
       );
     }
@@ -36,10 +38,12 @@ const withLoaderAndMessage = (WrappedComponent) => {
   WithLoaderAndMessage.propTypes = {
     loading: bool.isRequired,
     dataCount: number,
+    message: string,
   };
 
   WithLoaderAndMessage.defaultProps = {
     dataCount: 0,
+    message: 'No data found',
   };
 
   return WithLoaderAndMessage;

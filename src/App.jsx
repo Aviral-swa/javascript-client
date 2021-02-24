@@ -9,7 +9,7 @@ import { ProvideSnackBar } from './contexts';
 import client from './libs/apollo-client';
 import {
   ChildrenDemo, TextFieldDemo, InputDemo,
-  NoMatch, Login, Trainee, Employee,
+  NoMatch, Login, Employee, Trainee,
 } from './pages';
 
 const App = () => (

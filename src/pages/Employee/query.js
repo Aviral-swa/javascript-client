@@ -6,7 +6,6 @@ query GetEmployees {
     name
     role
     parent
-    ancestors
   }
 
   }

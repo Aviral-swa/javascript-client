@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import Button from '@material-ui/core/Button';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
@@ -15,7 +15,7 @@ const Employee = () => {
     data, loading, refetch,
   } = useQuery(GET_EMPLOYEES);
   let tableRecord;
-  if (!loading) {
+  if (!loading && data) {
     tableRecord = data.getEmployees;
   }
 
@@ -30,7 +30,11 @@ const Employee = () => {
         variables:
         { name: newEmployee.name, role: newEmployee.role, parent: newEmployee.parent },
       });
-      if (response.data) {
+      const { data: { createEmployee: { message } } } = response;
+      if (message) {
+        openSnackBar(message, 'error');
+      } else {
+        refetch();
         setOpen(false);
         openSnackBar('Employee added successfully', 'success');
       }
@@ -50,19 +54,12 @@ const Employee = () => {
     const levels = [];
     if (!loading) {
       tableRecord.map((employee) => (
-        levels.push({
-          label: employee.role,
-          field: 'name',
-        })
+        levels.push(employee.role)
       ));
     }
-    const uniqueLevels = [...new Map(levels.map((item) => [item.label, item])).values()];
+    const uniqueLevels = [...new Set(levels)];
     return uniqueLevels;
   };
-
-  useEffect(() => {
-    refetch();
-  }, [open]);
 
   return (
     <SnackBarContext.Consumer>
@@ -88,7 +85,7 @@ const Employee = () => {
               data={tableRecord}
               columns={getLevels()}
               loading={loading}
-              dataCount={1}
+              dataCount={!loading && tableRecord.length}
               message="No Employees Found"
             />
           </>

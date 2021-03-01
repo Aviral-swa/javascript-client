@@ -1,9 +1,9 @@
 import React from 'react';
 import {
-  Table, TableBody, TableContainer, TableHead, TableRow,
-  Paper, TableCell, Typography,
+  Table, TableBody, TableContainer, TableRow,
+  Paper, TableCell, Typography, makeStyles,
 } from '@material-ui/core';
-import { arrayOf, object } from 'prop-types';
+import { arrayOf, object, string } from 'prop-types';
 
 const EmployeeTable = (props) => {
   const {
@@ -13,11 +13,26 @@ const EmployeeTable = (props) => {
     { ...ele }
   ));
 
+  const numberOfLevels = (1000 / columns.length);
+
+  const useStyles = makeStyles(() => ({
+    header: {
+      marginRight: `${numberOfLevels}px`,
+    },
+    tableRow: {
+      border: '1px solid black',
+    },
+    tableCell: {
+      border: 'none', padding: '10px', width: '100px',
+    },
+  }));
+  const style = useStyles();
+
   const renderHeader = () => (
     columns.map((column) => (
       <TableCell>
-        <Typography>
-          {column.label.toUpperCase()}
+        <Typography className={style.header}>
+          {column.toUpperCase()}
         </Typography>
       </TableCell>
     ))
@@ -42,13 +57,13 @@ const EmployeeTable = (props) => {
       <TableBody>
         { treeData.map((node) => (
           <>
-            <TableRow>
-              <TableCell>
+            <TableRow className={style.tableRow}>
+              <TableCell className={style.tableCell}>
                 <Typography>
                   {node.name}
                 </Typography>
               </TableCell>
-              <TableCell>
+              <TableCell className={style.tableCell}>
                 { node.children && renderTableRow(node.children) }
               </TableCell>
             </TableRow>
@@ -60,13 +75,9 @@ const EmployeeTable = (props) => {
 
   return (
     <>
-      <TableContainer component={Paper}>
+      {renderHeader()}
+      <TableContainer id="container" component={Paper}>
         <Table>
-          <TableHead>
-            <TableRow>
-              {renderHeader()}
-            </TableRow>
-          </TableHead>
           <TableBody>
             <TableRow>
               {renderTableRow(tree)}
@@ -79,13 +90,13 @@ const EmployeeTable = (props) => {
 };
 
 EmployeeTable.propTypes = {
-  columns: arrayOf(object),
+  columns: arrayOf(string),
   data: arrayOf(object),
 };
 
 EmployeeTable.defaultProps = {
   data: [{}],
-  columns: [{}],
+  columns: [''],
 };
 
 export default EmployeeTable;

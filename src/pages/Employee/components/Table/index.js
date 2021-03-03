@@ -1,1 +1,4 @@
-export { default as Table } from './Table';
+import { withLoaderAndMessage } from '../../../../components';
+import Table from './Table';
+
+export const EnhancedTable = withLoaderAndMessage(Table);

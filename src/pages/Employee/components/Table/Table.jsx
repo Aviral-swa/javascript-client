@@ -4,29 +4,23 @@ import {
   Paper, TableCell, Typography, makeStyles,
 } from '@material-ui/core';
 import { arrayOf, object, string } from 'prop-types';
+import { parseTreeData } from './helper';
+import { RenderTableRow } from './components';
 
 const EmployeeTable = (props) => {
   const {
     data, columns,
   } = props;
-  const record = data.map((ele) => (
-    { ...ele }
-  ));
+  const tree = parseTreeData(data);
 
   const numberOfLevels = (1000 / columns.length);
 
-  const useStyles = makeStyles(() => ({
+  const styles = makeStyles(() => ({
     header: {
       marginRight: `${numberOfLevels}px`,
     },
-    tableRow: {
-      border: '1px solid black',
-    },
-    tableCell: {
-      border: 'none', padding: '10px', width: '100px',
-    },
   }));
-  const style = useStyles();
+  const style = styles();
 
   const renderHeader = () => (
     columns.map((column) => (
@@ -38,41 +32,6 @@ const EmployeeTable = (props) => {
     ))
   );
 
-  const tree = [];
-
-  record.forEach((node) => {
-    if (!node.parent) return tree.push(node);
-
-    const parentIndex = record.findIndex((el) => el.name === node.parent);
-    if (!record[parentIndex].children) {
-      // eslint-disable-next-line no-return-assign
-      return record[parentIndex].children = [node];
-    }
-
-    return record[parentIndex].children.push(node);
-  });
-
-  const renderTableRow = (treeData) => (
-    <Table>
-      <TableBody>
-        { treeData.map((node) => (
-          <>
-            <TableRow className={style.tableRow}>
-              <TableCell className={style.tableCell}>
-                <Typography>
-                  {node.name}
-                </Typography>
-              </TableCell>
-              <TableCell className={style.tableCell}>
-                { node.children && renderTableRow(node.children) }
-              </TableCell>
-            </TableRow>
-          </>
-        ))}
-      </TableBody>
-    </Table>
-  );
-
   return (
     <>
       {renderHeader()}
@@ -80,7 +39,7 @@ const EmployeeTable = (props) => {
         <Table>
           <TableBody>
             <TableRow>
-              {renderTableRow(tree)}
+              <RenderTableRow treeData={tree} />
             </TableRow>
           </TableBody>
         </Table>

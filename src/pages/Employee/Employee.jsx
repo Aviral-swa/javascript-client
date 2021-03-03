@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import Button from '@material-ui/core/Button';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import { AddDialog, Table } from './components';
-import { withLoaderAndMessage } from '../../components';
+import { AddDialog, EnhancedTable } from './components';
 import GET_EMPLOYEES from './query';
 import CREATE_EMPLOYEE from './mutation';
 import { SnackBarContext } from '../../contexts';
+import constants from './constants';
 
 const Employee = () => {
   const [open, setOpen] = useState(false);
@@ -32,14 +32,14 @@ const Employee = () => {
       });
       const { data: { createEmployee: { message } } } = response;
       if (message) {
-        openSnackBar(message, 'error');
+        openSnackBar(message, constants.ERROR);
       } else {
         refetch();
         setOpen(false);
-        openSnackBar('Employee added successfully', 'success');
+        openSnackBar(constants.ADDED_SUCCESSFULLY, constants.SUCCESS);
       }
     } catch (error) {
-      openSnackBar('Cannot added trainee', 'error');
+      openSnackBar(constants.CANNOT_ADD_EMPLOYEE, constants.ERROR);
       console.log(error);
     }
   };
@@ -47,8 +47,6 @@ const Employee = () => {
   const handleAddClose = () => {
     setOpen(false);
   };
-
-  const EnhancedTable = withLoaderAndMessage(Table);
 
   const getLevels = () => {
     const levels = [];
@@ -86,7 +84,7 @@ const Employee = () => {
               columns={getLevels()}
               loading={loading}
               dataCount={!loading && tableRecord.length}
-              message="No Employees Found"
+              message={constants.NOT_FOUND}
             />
           </>
         )

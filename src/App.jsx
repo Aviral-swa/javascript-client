@@ -9,7 +9,7 @@ import { ProvideSnackBar } from './contexts';
 import client from './libs/apollo-client';
 import {
   ChildrenDemo, TextFieldDemo, InputDemo,
-  NoMatch, Login, Trainee,
+  NoMatch, Login, Employee, Trainee,
 } from './pages';
 
 const App = () => (
@@ -25,6 +25,7 @@ const App = () => (
             <PrivateRoute exact path="/children-demo" component={ChildrenDemo} />
             <PrivateRoute exact path="/textfield-demo" component={TextFieldDemo} />
             <PrivateRoute path="/add-trainee" component={Trainee} />
+            <PrivateRoute path="/employee" component={Employee} />
             <PrivateRoute default component={NoMatch} />
           </Switch>
         </Router>

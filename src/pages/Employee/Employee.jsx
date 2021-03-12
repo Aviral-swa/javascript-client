@@ -50,7 +50,7 @@ const Employee = () => {
 
   const getLevels = () => {
     const levels = [];
-    if (!loading) {
+    if (!loading && tableRecord) {
       tableRecord.map((employee) => (
         levels.push(employee.role)
       ));
@@ -83,7 +83,7 @@ const Employee = () => {
               data={tableRecord}
               columns={getLevels()}
               loading={loading}
-              dataCount={!loading && tableRecord.length}
+              dataCount={(!loading && tableRecord) && tableRecord.length}
               message={constants.NOT_FOUND}
             />
           </>

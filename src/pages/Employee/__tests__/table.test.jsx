@@ -23,7 +23,7 @@ test('should have 1 table container', () => {
   expect(tableContainer).toHaveLength(1);
 });
 
-test('should have 1 table header', () => {
-  const tableHeader = screen.getAllByTestId('header');
-  expect(tableHeader).toHaveLength(1);
-});
+// test('should have 1 table header', () => {
+//   const tableHeader = screen.getAllByTestId('header');
+//   expect(tableHeader).toHaveLength(1);
+// });

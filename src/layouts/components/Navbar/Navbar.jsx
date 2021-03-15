@@ -52,6 +52,9 @@ const Navbar = () => {
                 <Link to="/employee">
                   <Button className={classes.button}>EMPLOYEE</Button>
                 </Link>
+                <Link to="/permission">
+                  <Button className={classes.button}>MANAGE PERMISSIONS</Button>
+                </Link>
                 <Link to="/login">
                   <Button
                     className={classes.button}

@@ -9,6 +9,7 @@ query GetAllTrainees($skip: Int, $limit: Int) {
       showing
       traineesList {
         name
+        role
         email
         originalId
         createdAt

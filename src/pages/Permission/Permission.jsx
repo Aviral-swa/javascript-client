@@ -7,8 +7,10 @@ import { styles } from './style';
 import { EnhancedTable, RemoveDialog, EditDialog } from './components';
 import getAllTrainees from '../Trainee/query';
 import GET_PERMISSION from './query';
+import UPDATE_PERMISSION from './mutation';
 import { DELETE_TRAINEE } from '../Trainee/mutation';
 import { getExpTime } from '../../libs/utils/sessionVerify';
+import { SnackBarContext } from '../../contexts';
 
 const Permission = (routerProps) => {
   const [page, setPage] = useState(0);
@@ -46,6 +48,7 @@ const Permission = (routerProps) => {
 
   const { data: perData, loading: perLoad, refetch: fetch } = useQuery(GET_PERMISSION, {
     variables: { email: '' },
+    fetchPolicy: 'network-only',
   });
 
   let permissionData;
@@ -62,18 +65,63 @@ const Permission = (routerProps) => {
     if (permissionData) {
       permissionData.forEach((element) => {
         if (element.email === user.email) {
-          // const mm = '__typename';
-          const permission = element;
-          // delete permission.resources[mm];
-          setUserPermission(permission);
+          setUserPermission(element);
         }
       });
     }
     setOpenDialog({ ...openDialog, edit: true });
   };
 
-  const handleOnClickEdit = () => {
-    console.log('edit');
+  const [updatePermissions, { loading: loadingUpdate }] = useMutation(UPDATE_PERMISSION);
+
+  const handleOnClickEdit = async (id, openSnackBar) => {
+    try {
+      const response = await updatePermissions({
+        variables: {
+          originalId: id,
+          resources: userPermission.resources,
+        },
+      });
+      const { data: { updatePermission: { message, status } } } = response;
+      if (status === 'success') {
+        fetch();
+        setOpenDialog({ ...openDialog, edit: false });
+        openSnackBar(message, status);
+      } else {
+        openSnackBar(message, 'error');
+      }
+    } catch (err) {
+      openSnackBar(err.message, 'error');
+    }
+  };
+
+  const createPermissionArray = (array, index) => {
+    const permissionsArray = [...array];
+    permissionsArray.splice(index, 1);
+    return [...permissionsArray];
+  };
+
+  const handleOnclickCheck = (event, attrb) => {
+    if (userPermission.resources[attrb].includes(event.target.value)) {
+      const index = userPermission.resources[attrb].indexOf(event.target.value);
+      if (index > -1) {
+        setUserPermission({
+          ...userPermission,
+          resources: {
+            ...userPermission.resources,
+            [attrb]: createPermissionArray(userPermission.resources[attrb], index),
+          },
+        });
+      }
+    } else {
+      setUserPermission({
+        ...userPermission,
+        resources: {
+          ...userPermission.resources,
+          [attrb]: [...userPermission.resources[attrb], event.target.value],
+        },
+      });
+    }
   };
 
   const handleEditClose = () => {
@@ -87,7 +135,7 @@ const Permission = (routerProps) => {
 
   const [deleteUser] = useMutation(DELETE_TRAINEE);
 
-  const handleOnClickDelete = async () => {
+  const handleOnClickDelete = async (openSnackBar) => {
     try {
       const response = await deleteUser({
         variables: { id: userId },
@@ -96,14 +144,12 @@ const Permission = (routerProps) => {
       if (status === 'success') {
         refetch();
         setOpenDialog({ ...openDialog, delete: false });
-        // openSnackBar(message, status);
-        console.log(message, status);
+        openSnackBar(message, status);
       } else {
-        // openSnackBar(message, 'error');
+        openSnackBar(message, 'error');
       }
     } catch (err) {
-      // openSnackBar(err.message, 'error');
-      console.log(err.message);
+      openSnackBar(err.message, 'error');
     }
   };
 
@@ -124,66 +170,73 @@ const Permission = (routerProps) => {
     };
   }, []);
   return (
-    <>
-      <Typography className={style.title} variant="h5" color="primary">
-        Manage Permissions
-      </Typography>
-      <EnhancedTable
-        id="originalId"
-        data={listData}
-        columns={[{
-          field: 'name',
-          label: 'Name',
-        },
-        {
-          field: 'email',
-          label: 'Email',
-          format: (value) => value && value.toUpperCase(),
-        },
-        {
-          field: 'role',
-          label: 'Group',
-          format: (value) => value && value.toUpperCase(),
-        },
-        {
-          field: 'buttons',
-          label: 'Actions',
-        },
-        ]}
-        actions={[
-          {
-            icon: <EditIcon />,
-            handler: handleEditDialogOpen,
-            title: 'Edit',
-          },
-          {
-            icon: <DeleteIcon />,
-            handler: handleRemoveDialogOpen,
-            title: 'Delete',
-          },
-        ]}
-        count={totalDataCount}
-        page={page}
-        onChangePage={handleChangePage}
-        loading={loading}
-        dataCount={totalDataCount}
-      />
-      <EditDialog
-        open={openDialog.edit}
-        onClose={handleEditClose}
-        onClickEdit={handleOnClickEdit}
-        defaultValue={userPermission}
-        loadingData={perLoad}
-        loading={loading}
-        columns={['create', 'read', 'update', 'delete']}
-      />
-      <RemoveDialog
-        open={openDialog.delete}
-        onClose={handleDeleteClose}
-        onClickDelete={handleOnClickDelete}
-        loading={loading}
-      />
-    </>
+    <SnackBarContext.Consumer>
+      {
+        ({ openSnackBar }) => (
+          <>
+            <Typography className={style.title} variant="h5" color="primary">
+              Manage Permissions
+            </Typography>
+            <EnhancedTable
+              id="originalId"
+              data={listData}
+              columns={[{
+                field: 'name',
+                label: 'Name',
+              },
+              {
+                field: 'email',
+                label: 'Email',
+                format: (value) => value && value.toUpperCase(),
+              },
+              {
+                field: 'role',
+                label: 'Group',
+                format: (value) => value && value.toUpperCase(),
+              },
+              {
+                field: 'buttons',
+                label: 'Actions',
+              },
+              ]}
+              actions={[
+                {
+                  icon: <EditIcon />,
+                  handler: handleEditDialogOpen,
+                  title: 'Edit',
+                },
+                {
+                  icon: <DeleteIcon />,
+                  handler: handleRemoveDialogOpen,
+                  title: 'Delete',
+                },
+              ]}
+              count={totalDataCount}
+              page={page}
+              onChangePage={handleChangePage}
+              loading={loading}
+              dataCount={totalDataCount}
+            />
+            <EditDialog
+              open={openDialog.edit}
+              onClose={handleEditClose}
+              onClickEdit={(id) => handleOnClickEdit(id, openSnackBar)}
+              defaultValue={userPermission}
+              loadingData={perLoad}
+              loading={loadingUpdate}
+              columns={['create', 'read', 'update', 'delete']}
+              handleCheckboxChange={handleOnclickCheck}
+            />
+            <RemoveDialog
+              open={openDialog.delete}
+              onClose={handleDeleteClose}
+              onClickDelete={() => handleOnClickDelete(openSnackBar)}
+              loading={loading}
+            />
+          </>
+        )
+      }
+    </SnackBarContext.Consumer>
   );
 };
 

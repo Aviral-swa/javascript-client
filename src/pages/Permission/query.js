@@ -6,11 +6,7 @@ query GetPermission($email: String) {
     data {
       originalId
       email
-      resources {
-        trainee
-        employee
-        permissions
-      }
+      resources
     }
   }
 

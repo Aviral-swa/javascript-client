@@ -118,7 +118,7 @@ table.propTypes = {
 
 table.defaultProps = {
   page: 0,
-  rowsPerPage: 5,
+  rowsPerPage: 15,
   actions: [{}],
   data: [{}],
 };

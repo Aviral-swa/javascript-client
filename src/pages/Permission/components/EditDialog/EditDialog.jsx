@@ -13,7 +13,7 @@ import { permissionRes } from './constants';
 const EditDialog = (props) => {
   const {
     open, onClose, onClickEdit, loadingData, defaultValue,
-    loading, columns,
+    loading, columns, handleCheckboxChange,
   } = props;
 
   const getDefaultValue = (attrb, permission) => {
@@ -42,6 +42,8 @@ const EditDialog = (props) => {
           <TableCell key={`${permission}${idx + 1}`}>
             <Checkbox
               defaultChecked={getDefaultValue(attrb, permission)}
+              value={permission}
+              onChange={(event) => handleCheckboxChange(event, attrb)}
             />
           </TableCell>
         ))}
@@ -89,7 +91,7 @@ const EditDialog = (props) => {
         </Button>
         <Button
           variant="contained"
-          onClick={() => onClickEdit()}
+          onClick={() => onClickEdit(defaultValue.originalId)}
           color="primary"
           disabled={loading}
         >
@@ -109,6 +111,7 @@ EditDialog.propTypes = {
   loadingData: bool,
   defaultValue: object,
   columns: array,
+  handleCheckboxChange: func.isRequired,
 };
 
 EditDialog.defaultProps = {

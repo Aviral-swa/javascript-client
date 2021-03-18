@@ -56,6 +56,7 @@ const Login = (routerProps) => {
       if (data) {
         setTouched({ ...state, signIn: false });
         localStorage.setItem('token', data.generated_token);
+        localStorage.setItem('user', state.email);
         routerProps.history.push('/add-trainee');
       } else {
         setTouched({ ...state, signIn: false });

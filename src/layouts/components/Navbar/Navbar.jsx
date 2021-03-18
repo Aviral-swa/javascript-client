@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   makeStyles, AppBar, Toolbar, Typography, Button, CssBaseline,
 } from '@material-ui/core';
@@ -19,7 +19,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Navbar = () => {
+  const [isDisabled, setIsDisabled] = useState({
+    trainee: true,
+  });
   const classes = useStyles();
+
+  const getVariant = (label) => {
+    if (!isDisabled[label]) return 'text';
+    return 'contained';
+  };
+
+  const handleButtonSelect = (label) => {
+    setIsDisabled({ [label]: true });
+  };
 
   const handleLogout = (openSnackBar) => {
     localStorage.clear();
@@ -38,22 +50,64 @@ const Navbar = () => {
               </Typography>
               <div>
                 <Link to="/add-trainee">
-                  <Button className={classes.button}>TRAINEE</Button>
+                  <Button
+                    className={classes.button}
+                    variant={getVariant('trainee')}
+                    disabled={isDisabled.trainee}
+                    onClick={() => handleButtonSelect('trainee')}
+                  >
+                    TRAINEE
+                  </Button>
                 </Link>
                 <Link to="/textfield-demo">
-                  <Button className={classes.button}>TEXTFILD DEMO</Button>
+                  <Button
+                    className={classes.button}
+                    variant={getVariant('textfieldDemo')}
+                    disabled={isDisabled.textfieldDemo}
+                    onClick={() => handleButtonSelect('textfieldDemo')}
+                  >
+                    TEXTFILD DEMO
+                  </Button>
                 </Link>
                 <Link to="/input-demo">
-                  <Button className={classes.button}>INPUTDEMO</Button>
+                  <Button
+                    className={classes.button}
+                    variant={getVariant('inputDemo')}
+                    disabled={isDisabled.inputDemo}
+                    onClick={() => handleButtonSelect('inputDemo')}
+                  >
+                    INPUTDEMO
+                  </Button>
                 </Link>
                 <Link to="/children-demo">
-                  <Button className={classes.button}>CHILDREN DEMO</Button>
+                  <Button
+                    className={classes.button}
+                    variant={getVariant('children')}
+                    disabled={isDisabled.children}
+                    onClick={() => handleButtonSelect('children')}
+                  >
+                    CHILDREN DEMO
+                  </Button>
                 </Link>
                 <Link to="/employee">
-                  <Button className={classes.button}>EMPLOYEE</Button>
+                  <Button
+                    className={classes.button}
+                    variant={getVariant('employee')}
+                    disabled={isDisabled.employee}
+                    onClick={() => handleButtonSelect('employee')}
+                  >
+                    EMPLOYEE
+                  </Button>
                 </Link>
                 <Link to="/permission">
-                  <Button className={classes.button}>MANAGE PERMISSIONS</Button>
+                  <Button
+                    variant={getVariant('permission')}
+                    className={classes.button}
+                    disabled={isDisabled.permission}
+                    onClick={() => handleButtonSelect('permission')}
+                  >
+                    MANAGE PERMISSIONS
+                  </Button>
                 </Link>
                 <Link to="/login">
                   <Button

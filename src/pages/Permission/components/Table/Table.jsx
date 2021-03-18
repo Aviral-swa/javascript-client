@@ -1,11 +1,12 @@
 import React from 'react';
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-  Paper, Typography, withStyles, TablePagination, IconButton, Tooltip,
+  Paper, Typography, withStyles, IconButton, Container,
 } from '@material-ui/core';
 import {
-  string, arrayOf, object, func, number,
+  string, arrayOf, object,
 } from 'prop-types';
+import { permissionRes } from '../EditDialog/constants';
 
 const StyledTableCell = withStyles(() => ({
   body: {
@@ -27,8 +28,8 @@ const StyledTableRow = withStyles((theme) => ({
 
 const table = (props) => {
   const {
-    id, columns, data,
-    count, rowsPerPage, page, onChangePage, actions,
+    id, columns, data, actions,
+    userPermissions,
   } = props;
   const renderHeader = () => (
     columns.map((column) => (
@@ -51,41 +52,33 @@ const table = (props) => {
           >
             <Typography>
               {
-                // eslint-disable-next-line no-nested-ternary
                 (column.format) ? (column.format(trainee[column.field]))
-                  : (trainee[column.field] ? trainee[column.field]
-                    : (actions.map((action, index) => (
-                      <Tooltip title={action.title} arrow>
-                        <IconButton
-                          component="td"
-                          key={`${trainee[id]}${index + 1}`}
-                          onClick={() => action.handler(trainee)}
-                        >
-                          {action.icon}
-                        </IconButton>
-                      </Tooltip>
-                    ))))
+                  : (trainee[column.field])
               }
             </Typography>
           </TableCell>
         ))}
+        {
+          actions.map((action, index) => (
+            userPermissions.permissions.includes(action.title)
+              ? (
+                <IconButton
+                  component="td"
+                  key={`${trainee[id]}${index + 1}`}
+                  onClick={() => action.handler(trainee)}
+                >
+                  {action.icon}
+                </IconButton>
+              )
+              : null
+          ))
+        }
       </StyledTableRow>
     ))
   );
 
-  const renderPagination = () => (
-    <TablePagination
-      rowsPerPageOptions={[]}
-      component="div"
-      count={count}
-      rowsPerPage={rowsPerPage}
-      page={page}
-      onChangePage={onChangePage}
-    />
-  );
-
   return (
-    <>
+    <Container>
       <TableContainer component={Paper}>
         <Table size="small">
           <TableHead>
@@ -98,10 +91,7 @@ const table = (props) => {
           </TableBody>
         </Table>
       </TableContainer>
-      {
-        renderPagination()
-      }
-    </>
+    </Container>
   );
 };
 
@@ -109,18 +99,14 @@ table.propTypes = {
   id: string.isRequired,
   columns: arrayOf(object).isRequired,
   data: arrayOf(object),
-  count: number.isRequired,
-  page: number,
-  rowsPerPage: number,
-  onChangePage: func.isRequired,
   actions: arrayOf(object),
+  userPermissions: object,
 };
 
 table.defaultProps = {
-  page: 0,
-  rowsPerPage: 15,
   actions: [{}],
   data: [{}],
+  userPermissions: permissionRes.resources,
 };
 
 export default table;

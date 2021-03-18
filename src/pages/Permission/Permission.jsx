@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import { Typography } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { styles } from './style';
 import { EnhancedTable, RemoveDialog, EditDialog } from './components';
 import getAllTrainees from '../Trainee/query';
 import GET_PERMISSION from './query';
@@ -13,7 +11,6 @@ import { getExpTime } from '../../libs/utils/sessionVerify';
 import { SnackBarContext } from '../../contexts';
 
 const Permission = (routerProps) => {
-  const [page, setPage] = useState(0);
   const [userId, setUserId] = useState('');
   const [userPermission, setUserPermission] = useState();
   const [openDialog, setOpenDialog] = useState({
@@ -41,10 +38,6 @@ const Permission = (routerProps) => {
       listData = [];
     }
   }
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
 
   const { data: perData, loading: perLoad, refetch: fetch } = useQuery(GET_PERMISSION, {
     variables: { email: '' },
@@ -157,8 +150,6 @@ const Permission = (routerProps) => {
     setOpenDialog({ ...openDialog, delete: false });
   };
 
-  const style = styles();
-
   useEffect(() => {
     const session = setTimeout(() => {
       localStorage.clear();
@@ -169,14 +160,20 @@ const Permission = (routerProps) => {
       clearTimeout(session);
     };
   }, []);
+  const currentUser = localStorage.getItem('user');
+  let currentUserPermissions;
+  if (permissionData) {
+    permissionData.forEach((element) => {
+      if (element.email === currentUser) {
+        currentUserPermissions = element.resources;
+      }
+    });
+  }
   return (
     <SnackBarContext.Consumer>
       {
         ({ openSnackBar }) => (
           <>
-            <Typography className={style.title} variant="h5" color="primary">
-              Manage Permissions
-            </Typography>
             <EnhancedTable
               id="originalId"
               data={listData}
@@ -192,30 +189,25 @@ const Permission = (routerProps) => {
               {
                 field: 'role',
                 label: 'Group',
+                align: 'right',
                 format: (value) => value && value.toUpperCase(),
-              },
-              {
-                field: 'buttons',
-                label: 'Actions',
               },
               ]}
               actions={[
                 {
                   icon: <EditIcon />,
                   handler: handleEditDialogOpen,
-                  title: 'Edit',
+                  title: 'update',
                 },
                 {
                   icon: <DeleteIcon />,
                   handler: handleRemoveDialogOpen,
-                  title: 'Delete',
+                  title: 'delete',
                 },
               ]}
-              count={totalDataCount}
-              page={page}
-              onChangePage={handleChangePage}
               loading={loading}
               dataCount={totalDataCount}
+              userPermissions={currentUserPermissions}
             />
             <EditDialog
               open={openDialog.edit}

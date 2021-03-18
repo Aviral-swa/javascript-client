@@ -11,6 +11,7 @@ import {
 import { SnackBarContext } from '../../contexts';
 import { withLoaderAndMessage, Table } from '../../components';
 import getAllTrainees from './query';
+import GET_PERMISSION from '../Permission/query';
 import { CREATE_TRAINEE, EDIT_TRAINEE, DELETE_TRAINEE } from './mutation';
 import { UPDATE_TRAINEE, TRAINEE_DELETED, TRAINEE_ADDED } from './subscription';
 import { getExpTime } from '../../libs/utils/sessionVerify';
@@ -25,6 +26,8 @@ const TraineeList = (routerProps) => {
   const [orderBy, setOrderBy] = useState();
   const [page, setPage] = useState(0);
   const [deleted, setDeleted] = useState(0);
+  const [addButtonShow, setAddButtonShow] = useState(false);
+  const [userPermissions, setUserPermissions] = useState([]);
   const [prefill, setPrefill] = useState({
     name: '',
     email: '',
@@ -271,20 +274,48 @@ const TraineeList = (routerProps) => {
   }, []);
 
   const getDate = (date) => moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');
+
+  const { data: permissiondata, loading: loadingPermissions } = useQuery(GET_PERMISSION,
+    {
+      variables: { email: '' },
+    });
+
+  const isAuth = () => {
+    if (!loadingPermissions && permissiondata) {
+      const { getPermission: { data: permissions } } = permissiondata;
+      permissions.forEach((element) => {
+        const userEmail = localStorage.getItem('user');
+        if (element.email === userEmail) {
+          const { resources: { trainee = [] } = {} } = element;
+          setUserPermissions(trainee);
+          setAddButtonShow(!!trainee.includes('create'));
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    isAuth();
+  }, [permissiondata]);
   return (
     <SnackBarContext.Consumer>
       {
         ({ openSnackBar }) => (
           <div>
-            <Button
-              variant="outlined"
-              color="primary"
-              startIcon={<PersonAddIcon />}
-              onClick={handleClickOpen}
-              style={{ marginBottom: '20px' }}
-            >
-              Add Trainee
-            </Button>
+            {
+              addButtonShow
+                ? (
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    startIcon={<PersonAddIcon />}
+                    onClick={handleClickOpen}
+                    style={{ marginBottom: '20px' }}
+                  >
+                    Add Trainee
+                  </Button>
+                ) : null
+            }
             <EnhancedTable
               id="originalId"
               data={tableRecords}
@@ -308,10 +339,12 @@ const TraineeList = (routerProps) => {
                 {
                   icon: <EditIcon />,
                   handler: handleEditDialogOpen,
+                  title: 'update',
                 },
                 {
                   icon: <DeleteIcon />,
                   handler: handleRemoveDialogOpen,
+                  title: 'delete',
                 },
               ]}
               order={order}
@@ -325,6 +358,7 @@ const TraineeList = (routerProps) => {
               loading={loading}
               dataCount={totalData}
               message="OOPS!, No Trainees Found"
+              userPermissions={userPermissions}
             />
             <AddDialog
               open={open.open}

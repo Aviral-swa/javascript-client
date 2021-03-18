@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import Button from '@material-ui/core/Button';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { AddDialog, EnhancedTable } from './components';
 import GET_EMPLOYEES from './query';
+import GET_PERMISSION from '../Permission/query';
 import CREATE_EMPLOYEE from './mutation';
 import { SnackBarContext } from '../../contexts';
 import constants from './constants';
 
 const Employee = () => {
   const [open, setOpen] = useState(false);
+  const [addButtonShow, setAddButtonShow] = useState(false);
 
   const {
     data, loading, refetch,
@@ -59,20 +61,48 @@ const Employee = () => {
     return uniqueLevels;
   };
 
+  const { data: permissiondata, loading: loadingPermissions } = useQuery(GET_PERMISSION,
+    {
+      variables: { email: '' },
+    });
+
+  const isAuth = () => {
+    if (!loadingPermissions && permissiondata) {
+      const { getPermission: { data: permissions = [] } } = permissiondata;
+      permissions.forEach((element) => {
+        const userEmail = localStorage.getItem('user');
+        if (element.email === userEmail) {
+          const { resources: { employee = [] } = {} } = element;
+          setAddButtonShow(!!employee.includes('create'));
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    isAuth();
+  }, [permissiondata]);
+
   return (
     <SnackBarContext.Consumer>
       {
         ({ openSnackBar }) => (
           <>
-            <Button
-              variant="outlined"
-              color="primary"
-              startIcon={<PersonAddIcon />}
-              onClick={handleAddClickOpen}
-              style={{ marginBottom: '20px' }}
-            >
-              Add Employee
-            </Button>
+            {
+              addButtonShow
+                ? (
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    startIcon={<PersonAddIcon />}
+                    onClick={handleAddClickOpen}
+                    style={{ marginBottom: '20px' }}
+                  >
+                    Add Employee
+                  </Button>
+                )
+                : null
+            }
             <AddDialog
               open={open}
               onClose={handleAddClose}

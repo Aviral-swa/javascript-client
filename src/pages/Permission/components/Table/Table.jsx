@@ -4,7 +4,7 @@ import {
   Paper, Typography, withStyles, IconButton, Container,
 } from '@material-ui/core';
 import {
-  string, arrayOf, object,
+  string, arrayOf, object, func,
 } from 'prop-types';
 import { permissionRes } from '../EditDialog/constants';
 
@@ -29,7 +29,7 @@ const StyledTableRow = withStyles((theme) => ({
 const table = (props) => {
   const {
     id, columns, data, actions,
-    userPermissions,
+    userPermissions, editOpen,
   } = props;
   const renderHeader = () => (
     columns.map((column) => (
@@ -49,6 +49,7 @@ const table = (props) => {
             key={`${trainee[id]}${column.field}`}
             align={column.align}
             style={{ padding: '8px' }}
+            onClick={() => editOpen(trainee)}
           >
             <Typography>
               {
@@ -101,6 +102,7 @@ table.propTypes = {
   data: arrayOf(object),
   actions: arrayOf(object),
   userPermissions: object,
+  editOpen: func.isRequired,
 };
 
 table.defaultProps = {

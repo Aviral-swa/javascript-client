@@ -1,19 +1,25 @@
 import React from 'react';
 import {
-  Dialog, DialogActions, DialogContent, DialogTitle,
+  Dialog, DialogContent, DialogTitle,
   Button, DialogContentText, CircularProgress, Typography,
-  Table, TableBody, TableRow, TableCell, Checkbox,
+  Table, TableBody, TableRow, TableCell, Checkbox, Slide,
+  AppBar, Toolbar, IconButton, TableContainer, Paper,
 } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import {
   array, bool, func, object,
 } from 'prop-types';
 import { styles } from './style';
 import { permissionRes } from './constants';
 
+// eslint-disable-next-line react/jsx-props-no-spreading
+const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
+
 const EditDialog = (props) => {
   const {
     open, onClose, onClickEdit, loadingData, defaultValue,
-    loading, columns, handleCheckboxChange,
+    loading, columns, handleCheckboxChange, onClickSave,
+    isDisabled, currentUserPermissions,
   } = props;
 
   const getDefaultValue = (attrb, permission) => {
@@ -41,7 +47,8 @@ const EditDialog = (props) => {
         { columns.map((permission, idx) => (
           <TableCell key={`${permission}${idx + 1}`}>
             <Checkbox
-              defaultChecked={getDefaultValue(attrb, permission)}
+              checked={getDefaultValue(attrb, permission)}
+              disabled={isDisabled}
               value={permission}
               onChange={(event) => handleCheckboxChange(event, attrb)}
             />
@@ -58,7 +65,11 @@ const EditDialog = (props) => {
         <DialogTitle id="form-dialog-title">Update</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Change user permissions according to the attributes.
+            <Typography variant="h6" component="p">
+              {defaultValue.email}
+              {' '}
+              permissions
+            </Typography>
           </DialogContentText>
           <CircularProgress size={30} />
         </DialogContent>
@@ -66,39 +77,58 @@ const EditDialog = (props) => {
     );
   }
   return (
-    <Dialog fullWidth maxWidth="md" open={open} onClose={onClose} aria-labelledby="form-dialog-title">
-      <DialogTitle id="form-dialog-title">Update</DialogTitle>
+    <Dialog fullScreen open={open} onClose={onClose} TransitionComponent={Transition}>
+      <AppBar className={style.appBar}>
+        <Toolbar>
+          <IconButton edge="start" color="inherit" onClick={onClose} aria-label="close">
+            <CloseIcon />
+          </IconButton>
+          <Typography variant="h6" className={style.title}>
+            Update
+          </Typography>
+          {
+            currentUserPermissions.includes('update')
+              ? (
+                <>
+                  <Button color="inherit" onClick={() => onClickEdit()}>
+                    Edit
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={() => onClickSave(defaultValue.originalId)}
+                    color="secondary"
+                    disabled={loading}
+                  >
+                    save
+                  </Button>
+                </>
+              ) : null
+          }
+        </Toolbar>
+      </AppBar>
       <DialogContent>
         <DialogContentText>
-          Change user permissions according to the attributes.
+          <Typography variant="h6" color="textPrimary">
+            Permissisons for
+            {' '}
+            {defaultValue.email}
+          </Typography>
         </DialogContentText>
-        <div className={style.permissionType}>
-          { columns.map((column) => (
-            <Typography className={style.actions}>
-              {column}
-            </Typography>
-          ))}
-        </div>
-        <Table size="small">
-          <TableBody>
-            {renderTableRow()}
-          </TableBody>
-        </Table>
+        <TableContainer component={Paper}>
+          <div className={style.permissionType}>
+            { columns.map((column) => (
+              <Typography className={style.actions}>
+                {column}
+              </Typography>
+            ))}
+          </div>
+          <Table size="small">
+            <TableBody>
+              {renderTableRow()}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="primary">
-          Cancel
-        </Button>
-        <Button
-          variant="contained"
-          onClick={() => onClickEdit(defaultValue.originalId)}
-          color="primary"
-          disabled={loading}
-        >
-          {loading && <CircularProgress size={24} />}
-          Update Permissions
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 };
@@ -112,6 +142,9 @@ EditDialog.propTypes = {
   defaultValue: object,
   columns: array,
   handleCheckboxChange: func.isRequired,
+  onClickSave: func.isRequired,
+  isDisabled: bool,
+  currentUserPermissions: array,
 };
 
 EditDialog.defaultProps = {
@@ -120,6 +153,8 @@ EditDialog.defaultProps = {
   loadingData: false,
   defaultValue: permissionRes,
   columns: ['create', 'read', 'update', 'delete'],
+  isDisabled: true,
+  currentUserPermissions: [],
 };
 
 export default EditDialog;

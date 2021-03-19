@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { EnhancedTable, RemoveDialog, EditDialog } from './components';
 import getAllTrainees from '../Trainee/query';
@@ -13,6 +12,7 @@ import { SnackBarContext } from '../../contexts';
 const Permission = (routerProps) => {
   const [userId, setUserId] = useState('');
   const [userPermission, setUserPermission] = useState();
+  const [checkDisabled, setCheckDisabled] = useState(true);
   const [openDialog, setOpenDialog] = useState({
     edit: false,
     delete: false,
@@ -67,7 +67,7 @@ const Permission = (routerProps) => {
 
   const [updatePermissions, { loading: loadingUpdate }] = useMutation(UPDATE_PERMISSION);
 
-  const handleOnClickEdit = async (id, openSnackBar) => {
+  const handleOnClickSave = async (id, openSnackBar) => {
     try {
       const response = await updatePermissions({
         variables: {
@@ -79,6 +79,7 @@ const Permission = (routerProps) => {
       if (status === 'success') {
         fetch();
         setOpenDialog({ ...openDialog, edit: false });
+        setCheckDisabled(true);
         openSnackBar(message, status);
       } else {
         openSnackBar(message, 'error');
@@ -119,6 +120,7 @@ const Permission = (routerProps) => {
 
   const handleEditClose = () => {
     setOpenDialog({ ...openDialog, edit: false });
+    setCheckDisabled(true);
   };
 
   const handleRemoveDialogOpen = (user) => {
@@ -148,6 +150,10 @@ const Permission = (routerProps) => {
 
   const handleDeleteClose = () => {
     setOpenDialog({ ...openDialog, delete: false });
+  };
+
+  const handleOnClickEdit = () => {
+    setCheckDisabled(false);
   };
 
   useEffect(() => {
@@ -195,11 +201,6 @@ const Permission = (routerProps) => {
               ]}
               actions={[
                 {
-                  icon: <EditIcon />,
-                  handler: handleEditDialogOpen,
-                  title: 'update',
-                },
-                {
                   icon: <DeleteIcon />,
                   handler: handleRemoveDialogOpen,
                   title: 'delete',
@@ -208,16 +209,20 @@ const Permission = (routerProps) => {
               loading={loading}
               dataCount={totalDataCount}
               userPermissions={currentUserPermissions}
+              editOpen={handleEditDialogOpen}
             />
             <EditDialog
               open={openDialog.edit}
               onClose={handleEditClose}
-              onClickEdit={(id) => handleOnClickEdit(id, openSnackBar)}
+              onClickSave={(id) => handleOnClickSave(id, openSnackBar)}
               defaultValue={userPermission}
               loadingData={perLoad}
               loading={loadingUpdate}
               columns={['create', 'read', 'update', 'delete']}
               handleCheckboxChange={handleOnclickCheck}
+              onClickEdit={handleOnClickEdit}
+              isDisabled={checkDisabled}
+              currentUserPermissions={currentUserPermissions?.permissions}
             />
             <RemoveDialog
               open={openDialog.delete}

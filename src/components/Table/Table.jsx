@@ -4,7 +4,7 @@ import {
   Paper, Typography, withStyles, TableSortLabel, TablePagination, IconButton,
 } from '@material-ui/core';
 import {
-  string, arrayOf, object, func, number,
+  string, arrayOf, object, func, number, array,
 } from 'prop-types';
 
 const StyledTableCell = withStyles(() => ({
@@ -29,6 +29,7 @@ const table = (props) => {
   const {
     id, columns, data, onSort, orderBy, order, onSelect,
     count, rowsPerPage, page, onChangePage, actions,
+    userPermissions,
   } = props;
   const renderHeader = () => (
     columns.map((column) => (
@@ -65,13 +66,16 @@ const table = (props) => {
         ))}
         {
           actions.map((action, index) => (
-            <IconButton
-              component="td"
-              key={`${trainee[id]}${index + 1}`}
-              onClick={() => action.handler(trainee)}
-            >
-              {action.icon}
-            </IconButton>
+            userPermissions.includes(action.title)
+              ? (
+                <IconButton
+                  component="td"
+                  key={`${trainee[id]}${index + 1}`}
+                  onClick={() => action.handler(trainee)}
+                >
+                  {action.icon}
+                </IconButton>
+              ) : null
           ))
         }
       </StyledTableRow>
@@ -123,6 +127,7 @@ table.propTypes = {
   rowsPerPage: number,
   onChangePage: func.isRequired,
   actions: arrayOf(object),
+  userPermissions: array,
 };
 
 table.defaultProps = {
@@ -132,6 +137,7 @@ table.defaultProps = {
   rowsPerPage: 5,
   actions: [{}],
   data: [{}],
+  userPermissions: array,
 };
 
 export default table;

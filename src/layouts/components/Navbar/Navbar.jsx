@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   makeStyles, AppBar, Toolbar, Typography, Button, CssBaseline,
 } from '@material-ui/core';
@@ -16,10 +16,21 @@ const useStyles = makeStyles((theme) => ({
   button: {
     color: 'white',
   },
+  select: {
+    color: 'white',
+    boxShadow: '1px 1px 2px #00dbff',
+  },
 }));
 
 const Navbar = () => {
+  const [selected, setSelected] = useState({
+    trainee: true,
+  });
   const classes = useStyles();
+
+  const handleButtonSelect = (label) => {
+    setSelected({ [label]: true });
+  };
 
   const handleLogout = (openSnackBar) => {
     localStorage.clear();
@@ -38,16 +49,52 @@ const Navbar = () => {
               </Typography>
               <div>
                 <Link to="/add-trainee">
-                  <Button className={classes.button}>TRAINEE</Button>
+                  <Button
+                    className={selected.trainee ? classes.select : classes.button}
+                    onClick={() => handleButtonSelect('trainee')}
+                  >
+                    TRAINEE
+                  </Button>
                 </Link>
                 <Link to="/textfield-demo">
-                  <Button className={classes.button}>TEXTFILD DEMO</Button>
+                  <Button
+                    className={selected.textfieldDemo ? classes.select : classes.button}
+                    onClick={() => handleButtonSelect('textfieldDemo')}
+                  >
+                    TEXTFILD DEMO
+                  </Button>
                 </Link>
                 <Link to="/input-demo">
-                  <Button className={classes.button}>INPUTDEMO</Button>
+                  <Button
+                    className={selected.inputDemo ? classes.select : classes.button}
+                    onClick={() => handleButtonSelect('inputDemo')}
+                  >
+                    INPUTDEMO
+                  </Button>
                 </Link>
                 <Link to="/children-demo">
-                  <Button className={classes.button}>CHILDREN DEMO</Button>
+                  <Button
+                    className={selected.children ? classes.select : classes.button}
+                    onClick={() => handleButtonSelect('children')}
+                  >
+                    CHILDREN DEMO
+                  </Button>
+                </Link>
+                <Link to="/employee">
+                  <Button
+                    className={selected.employee ? classes.select : classes.button}
+                    onClick={() => handleButtonSelect('employee')}
+                  >
+                    EMPLOYEE
+                  </Button>
+                </Link>
+                <Link to="/permission">
+                  <Button
+                    className={selected.permission ? classes.select : classes.button}
+                    onClick={() => handleButtonSelect('permission')}
+                  >
+                    MANAGE PERMISSIONS
+                  </Button>
                 </Link>
                 <Link to="/login">
                   <Button

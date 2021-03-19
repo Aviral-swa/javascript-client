@@ -16,21 +16,20 @@ const useStyles = makeStyles((theme) => ({
   button: {
     color: 'white',
   },
+  select: {
+    color: 'white',
+    boxShadow: '1px 1px 2px #00dbff',
+  },
 }));
 
 const Navbar = () => {
-  const [isDisabled, setIsDisabled] = useState({
+  const [selected, setSelected] = useState({
     trainee: true,
   });
   const classes = useStyles();
 
-  const getVariant = (label) => {
-    if (!isDisabled[label]) return 'text';
-    return 'contained';
-  };
-
   const handleButtonSelect = (label) => {
-    setIsDisabled({ [label]: true });
+    setSelected({ [label]: true });
   };
 
   const handleLogout = (openSnackBar) => {
@@ -51,9 +50,7 @@ const Navbar = () => {
               <div>
                 <Link to="/add-trainee">
                   <Button
-                    className={classes.button}
-                    variant={getVariant('trainee')}
-                    disabled={isDisabled.trainee}
+                    className={selected.trainee ? classes.select : classes.button}
                     onClick={() => handleButtonSelect('trainee')}
                   >
                     TRAINEE
@@ -61,9 +58,7 @@ const Navbar = () => {
                 </Link>
                 <Link to="/textfield-demo">
                   <Button
-                    className={classes.button}
-                    variant={getVariant('textfieldDemo')}
-                    disabled={isDisabled.textfieldDemo}
+                    className={selected.textfieldDemo ? classes.select : classes.button}
                     onClick={() => handleButtonSelect('textfieldDemo')}
                   >
                     TEXTFILD DEMO
@@ -71,9 +66,7 @@ const Navbar = () => {
                 </Link>
                 <Link to="/input-demo">
                   <Button
-                    className={classes.button}
-                    variant={getVariant('inputDemo')}
-                    disabled={isDisabled.inputDemo}
+                    className={selected.inputDemo ? classes.select : classes.button}
                     onClick={() => handleButtonSelect('inputDemo')}
                   >
                     INPUTDEMO
@@ -81,9 +74,7 @@ const Navbar = () => {
                 </Link>
                 <Link to="/children-demo">
                   <Button
-                    className={classes.button}
-                    variant={getVariant('children')}
-                    disabled={isDisabled.children}
+                    className={selected.children ? classes.select : classes.button}
                     onClick={() => handleButtonSelect('children')}
                   >
                     CHILDREN DEMO
@@ -91,9 +82,7 @@ const Navbar = () => {
                 </Link>
                 <Link to="/employee">
                   <Button
-                    className={classes.button}
-                    variant={getVariant('employee')}
-                    disabled={isDisabled.employee}
+                    className={selected.employee ? classes.select : classes.button}
                     onClick={() => handleButtonSelect('employee')}
                   >
                     EMPLOYEE
@@ -101,9 +90,7 @@ const Navbar = () => {
                 </Link>
                 <Link to="/permission">
                   <Button
-                    variant={getVariant('permission')}
-                    className={classes.button}
-                    disabled={isDisabled.permission}
+                    className={selected.permission ? classes.select : classes.button}
                     onClick={() => handleButtonSelect('permission')}
                   >
                     MANAGE PERMISSIONS

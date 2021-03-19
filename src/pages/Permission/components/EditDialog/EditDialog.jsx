@@ -21,7 +21,6 @@ const EditDialog = (props) => {
     loading, columns, handleCheckboxChange, onClickSave,
     isDisabled, currentUserPermissions,
   } = props;
-
   const getDefaultValue = (attrb, permission) => {
     if (!defaultValue) return false;
     if (defaultValue.resources[attrb].includes(permission)) return true;

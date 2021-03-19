@@ -50,12 +50,12 @@ const Permission = (routerProps) => {
       const { getPermission: { data: permissionDataa } } = perData;
       permissionData = permissionDataa;
     } catch {
-      permissionData = {};
+      permissionData = [];
     }
   }
   const handleEditDialogOpen = (user) => {
     fetch();
-    if (permissionData) {
+    if (permissionData.length) {
       permissionData.forEach((element) => {
         if (element.email === user.email) {
           setUserPermission(element);
@@ -77,10 +77,10 @@ const Permission = (routerProps) => {
       });
       const { data: { updatePermission: { message, status } } } = response;
       if (status === 'success') {
-        fetch();
         setOpenDialog({ ...openDialog, edit: false });
         setCheckDisabled(true);
         openSnackBar(message, status);
+        fetch();
       } else {
         openSnackBar(message, 'error');
       }
@@ -96,7 +96,8 @@ const Permission = (routerProps) => {
   };
 
   const handleOnclickCheck = (event, attrb) => {
-    if (userPermission.resources[attrb].includes(event.target.value)) {
+    const condition = userPermission.resources[attrb].includes(event.target.value);
+    if (condition) {
       const index = userPermission.resources[attrb].indexOf(event.target.value);
       if (index > -1) {
         setUserPermission({
@@ -107,6 +108,15 @@ const Permission = (routerProps) => {
           },
         });
       }
+    } else if (!condition && ['create', 'update', 'delete'].includes(event.target.value)
+        && !userPermission.resources[attrb].includes('read')) {
+      setUserPermission({
+        ...userPermission,
+        resources: {
+          ...userPermission.resources,
+          [attrb]: [...userPermission.resources[attrb], event.target.value, 'read'],
+        },
+      });
     } else {
       setUserPermission({
         ...userPermission,

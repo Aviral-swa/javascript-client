@@ -6,6 +6,7 @@ import getAllTrainees from '../Trainee/query';
 import GET_PERMISSION from './query';
 import UPDATE_PERMISSION from './mutation';
 import { DELETE_TRAINEE } from '../Trainee/mutation';
+import { PERMISSION_UPDATED } from './subscription';
 import { getExpTime } from '../../libs/utils/sessionVerify';
 import { SnackBarContext } from '../../contexts';
 
@@ -39,7 +40,9 @@ const Permission = (routerProps) => {
     }
   }
 
-  const { data: perData, loading: perLoad, refetch: fetch } = useQuery(GET_PERMISSION, {
+  const {
+    data: perData, loading: perLoad, subscribeToMore,
+  } = useQuery(GET_PERMISSION, {
     variables: { email: '' },
     fetchPolicy: 'network-only',
   });
@@ -53,8 +56,34 @@ const Permission = (routerProps) => {
       permissionData = [];
     }
   }
+
+  useEffect(() => {
+    subscribeToMore({
+      document: PERMISSION_UPDATED,
+      updateQuery: (previous, { subscriptionData }) => {
+        if (!subscriptionData) return previous;
+        const { data: prevData = {} } = previous.getPermission;
+        const { updatePermissions: { data: updatedData } } = subscriptionData.data;
+        const updatedList = [...prevData].map((permission) => {
+          if (permission.originalId === updatedData.originalId) {
+            return {
+              ...permission,
+              ...updatedData,
+            };
+          }
+          return permission;
+        });
+        return {
+          getPermission: {
+            ...previous.getPermission,
+            data: updatedList,
+          },
+        };
+      },
+    });
+  }, []);
+
   const handleEditDialogOpen = (user) => {
-    fetch();
     if (permissionData.length) {
       permissionData.forEach((element) => {
         if (element.email === user.email) {
@@ -80,7 +109,6 @@ const Permission = (routerProps) => {
         setOpenDialog({ ...openDialog, edit: false });
         setCheckDisabled(true);
         openSnackBar(message, status);
-        fetch();
       } else {
         openSnackBar(message, 'error');
       }
@@ -190,37 +218,42 @@ const Permission = (routerProps) => {
       {
         ({ openSnackBar }) => (
           <>
-            <EnhancedTable
-              id="originalId"
-              data={listData}
-              columns={[{
-                field: 'name',
-                label: 'Name',
-              },
-              {
-                field: 'email',
-                label: 'Email',
-                format: (value) => value && value.toUpperCase(),
-              },
-              {
-                field: 'role',
-                label: 'Group',
-                align: 'right',
-                format: (value) => value && value.toUpperCase(),
-              },
-              ]}
-              actions={[
-                {
-                  icon: <DeleteIcon />,
-                  handler: handleRemoveDialogOpen,
-                  title: 'delete',
-                },
-              ]}
-              loading={loading}
-              dataCount={totalDataCount}
-              userPermissions={currentUserPermissions}
-              editOpen={handleEditDialogOpen}
-            />
+            {
+              currentUserPermissions?.permissions.includes('read')
+                ? (
+                  <EnhancedTable
+                    id="originalId"
+                    data={listData}
+                    columns={[{
+                      field: 'name',
+                      label: 'Name',
+                    },
+                    {
+                      field: 'email',
+                      label: 'Email',
+                      format: (value) => value && value.toUpperCase(),
+                    },
+                    {
+                      field: 'role',
+                      label: 'Group',
+                      align: 'right',
+                      format: (value) => value && value.toUpperCase(),
+                    },
+                    ]}
+                    actions={[
+                      {
+                        icon: <DeleteIcon />,
+                        handler: handleRemoveDialogOpen,
+                        title: 'delete',
+                      },
+                    ]}
+                    loading={loading}
+                    dataCount={totalDataCount}
+                    userPermissions={currentUserPermissions}
+                    editOpen={handleEditDialogOpen}
+                  />
+                ) : <h2>No Data</h2>
+            }
             <EditDialog
               open={openDialog.edit}
               onClose={handleEditClose}

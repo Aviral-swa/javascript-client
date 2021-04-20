@@ -13,8 +13,8 @@ const callApi = async (route, method, body) => {
       },
     };
     if ((method === 'get') || (method === 'delete')) {
-      const response = await axios[method](`${BASE_URL}${route}`, authHeader);
-      return response.data;
+      const apiResponse = await axios[method](`${BASE_URL}${route}`, authHeader);
+      return apiResponse.data;
     }
     const response = await axios[method](`${BASE_URL}${route}`, body, authHeader);
     return response.data;

@@ -8,19 +8,26 @@ import AddDialog from '../components/AddDialog/AddDialog';
 
 afterEach(cleanup);
 configure({ testIdAttribute: 'id' });
-render(<AddDialog
-  open
-  onSubmit={() => {}}
-  onClose={() => {}}
-/>);
+let open = true;
+beforeEach(() => render(<AddDialog
+  open={open}
+  onSubmit={() => { open = false; }}
+  onClose={() => { open = false; }}
+/>));
 
 test('should open the dialog', () => {
   const title = screen.getByTestId('form-dialog-title');
   expect(title).toHaveTextContent('Add Employee');
 });
 
+test('should have 3 textfields', () => {
+  const textfields = screen.getAllByTestId('fields');
+  expect(textfields).toHaveLength(3);
+});
+
 // test('should close the dialog', () => {
-//   fireEvent.click(screen.getByText('Cancel'));
-//   const title = screen.findAllByText('Add Employee');
-//   expect(title).toHaveLength(0);
+//   const button = screen.getByText(/Cancel/i);
+//   fireEvent.click(button);
+//   const textfields = screen.getAllByTestId('fields');
+//   expect(textfields).toHaveLength(0);
 // });

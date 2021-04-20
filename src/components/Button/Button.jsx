@@ -24,6 +24,7 @@ const Button = (props) => {
 
   return (
     <Buttons
+      id="button"
       type="submit"
       disabled={disabled}
       style={style}

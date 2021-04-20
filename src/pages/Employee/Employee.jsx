@@ -53,12 +53,11 @@ const Employee = () => {
   const getLevels = () => {
     const levels = [];
     if (!loading && tableRecord) {
-      tableRecord.map((employee) => (
+      tableRecord.forEach((employee) => (
         levels.push(employee.role)
       ));
     }
-    const uniqueLevels = [...new Set(levels)];
-    return uniqueLevels;
+    return [...new Set(levels)];
   };
 
   const { data: permissiondata, loading: loadingPermissions } = useQuery(GET_PERMISSION,

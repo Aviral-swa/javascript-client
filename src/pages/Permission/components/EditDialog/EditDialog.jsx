@@ -28,8 +28,7 @@ const EditDialog = (props) => {
   };
   const getModules = () => {
     if (!defaultValue) return Object.keys(permissionRes.resources);
-    const resources = Object.keys(defaultValue.resources);
-    return resources;
+    return Object.keys(defaultValue.resources);
   };
 
   const renderTableRow = () => (

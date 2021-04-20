@@ -101,7 +101,7 @@ const Permission = (routerProps) => {
       const response = await updatePermissions({
         variables: {
           originalId: id,
-          resources: userPermission.resources,
+          resources: userPermission?.resources,
         },
       });
       const { data: { updatePermission: { message, status } } } = response;
@@ -231,13 +231,13 @@ const Permission = (routerProps) => {
                     {
                       field: 'email',
                       label: 'Email',
-                      format: (value) => value && value.toUpperCase(),
+                      format: (value) => value?.toUpperCase(),
                     },
                     {
                       field: 'role',
                       label: 'Group',
                       align: 'right',
-                      format: (value) => value && value.toUpperCase(),
+                      format: (value) => value?.toUpperCase(),
                     },
                     ]}
                     actions={[

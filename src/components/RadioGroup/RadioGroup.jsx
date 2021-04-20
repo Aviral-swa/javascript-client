@@ -14,7 +14,7 @@ const RadioGroup = (props) => {
         <div key={label}>
           <input
             type="radio"
-            id={value}
+            id="radioGroup"
             onBlur={onBlur}
             name={label}
             value={value}

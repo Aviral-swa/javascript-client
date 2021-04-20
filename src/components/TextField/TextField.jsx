@@ -13,19 +13,21 @@ const TextField = (props) => {
         <Input
           error
           type="text"
+          id="textfield"
           defaultValue={defaultValue}
           disabled={disabled}
           pattern={pattern}
           onChange={onChange}
           onBlur={onBlur}
         />
-        <P error>{error}</P>
+        <P id="error" error>{error}</P>
       </>
     );
   }
   return (
     <Input
       type="text"
+      id="textfield"
       defaultValue={defaultValue}
       disabled={disabled}
       pattern={pattern}

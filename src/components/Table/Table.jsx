@@ -49,7 +49,7 @@ const table = (props) => {
 
   const renderTableRow = () => (
     data.map((trainee) => (
-      <StyledTableRow key={trainee[id]}>
+      <StyledTableRow key={trainee[id]} id="tableRows">
         { columns.map((column) => (
           <TableCell
             key={`${trainee[id]}${column.field}`}
@@ -95,14 +95,14 @@ const table = (props) => {
 
   return (
     <>
-      <TableContainer component={Paper}>
+      <TableContainer id="container" component={Paper}>
         <Table>
-          <TableHead>
+          <TableHead id="head">
             <TableRow>
               {renderHeader()}
             </TableRow>
           </TableHead>
-          <TableBody>
+          <TableBody id="body">
             {renderTableRow()}
           </TableBody>
         </Table>
@@ -137,7 +137,7 @@ table.defaultProps = {
   rowsPerPage: 5,
   actions: [{}],
   data: [{}],
-  userPermissions: array,
+  userPermissions: [],
 };
 
 export default table;

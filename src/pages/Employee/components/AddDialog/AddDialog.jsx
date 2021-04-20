@@ -117,7 +117,7 @@ const AddDialog = (props) => {
           </DialogContentText>
           <div>
             <Grid container spacing={1}>
-              <Grid item md={12}>
+              <Grid item md={12} id="fields">
                 {
                   renderFormField({
                     label: 'Name',
@@ -127,7 +127,7 @@ const AddDialog = (props) => {
                   })
                 }
               </Grid>
-              <Grid item md={12}>
+              <Grid item md={12} id="fields">
                 {
                   renderFormField({
                     label: 'Role',
@@ -137,7 +137,7 @@ const AddDialog = (props) => {
                   })
                 }
               </Grid>
-              <Grid item md={5}>
+              <Grid item md={5} id="fields">
                 {
                   renderFormField({
                     label: 'Parent',

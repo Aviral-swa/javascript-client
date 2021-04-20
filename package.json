@@ -27,7 +27,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --testResultsProcessor jest-sonar-reporter",
     "test:c": "react-scripts test --coverage --watchAll=false",
     "eject": "react-scripts eject",
     "lint": "eslint src/**/*.jsx",
@@ -56,6 +56,7 @@
     "babel-eslint": "^10.1.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-plugin-react": "^7.21.5",
-    "husky": "^4.3.5"
+    "husky": "^4.3.5",
+    "jest-sonar-reporter": "^2.0.0"
   }
 }

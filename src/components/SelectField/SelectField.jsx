@@ -11,7 +11,7 @@ const SelectField = (props) => {
   } = props;
 
   const selectOptions = options.map(({ value, label }) => (
-    <option key={label} value={value}>{label}</option>));
+    <option id="selectField" key={label} value={value}>{label}</option>));
 
   return (
     <>
@@ -21,7 +21,7 @@ const SelectField = (props) => {
           selectOptions
         }
       </Select>
-      <ErrorText error>{error}</ErrorText>
+      <ErrorText id="errorText" error>{error}</ErrorText>
     </>
   );
 };

@@ -4,3 +4,5 @@ package-lock.json
 coverage
 build
 .env
+.scannerwork
+test-report.xml
